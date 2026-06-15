@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+python-multipart
+websockets
+pandas
+jinja2
+weasyprint
+PyPDF2

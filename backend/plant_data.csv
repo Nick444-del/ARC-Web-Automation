@@ -1,0 +1,6 @@
+PLANT NAME,Address,GST No,Customer ID,Original GST File,Status,EXPORT,Particlar1,gst
+DADRA,"Survey No 130, JAYANTIBHAI DESAI MARG, Dungra, Dadra And Nagar Haveli, and Daman and Diu, 396193",26AAACD3819P1ZD,181486,Yes,vaibhav.patel@dorfketal.com,DPRE,Freight Income - Intercity,IGST
+MUNDRA,"SECTOR 12N, PLOT NO 2, ADANI PORT AND SEZ, MUNDRA, KUTCH, Kachchh, Gujarat, 370421",24AAACD3819P3ZF,181494,No,invoice.mundra@dorfketal.com /   sunil.chavda@dorfketal.com  / amarjeet.kumar@dorfketal.com,MPRE,Freight Income - Intercity - SEZ,
+TALOJA,"W-165B,W-166B,W-167B, J-10/2,J-10/3,J-11,J-12/1, MIDC Taloja Raigad Maharashtra - 410208, India",27AAACD3819P1ZB,181487,Yes,invoice.taloja@dorfketal.com /  ratnakars@dorfketal.com,TPRE,Freight Income - Intercity,CGST & SGST
+DAHEJ,"DAHEJ SEZ, PLOT NO Z-108, PART-2, VILLAGE LAKHIGAM, TAL. VAGRA, Bharuch, Gujarat, 392130",24AAACD3819P2ZG,181531,No,dhaval.chauhan@dorfketal.com /  shayan.prajapati@dorfketal.com,DHPRE,Freight Income - Intercity - SEZ,
+LOTE,"B-52/3, MIDC, Lote Parshuram Indl Est, Khed ? 415722, Maharashtra.",27AAACD3819P1ZB,181490,Yes,Invoice.filtra@dorfketal.com /  manasi.yadav@dorfketal.com,FPRE,Freight Income - Intercity,CGST & SGST
