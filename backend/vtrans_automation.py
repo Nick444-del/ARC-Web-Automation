@@ -26,6 +26,11 @@ def safe_str(val):
     if cleaned.lower() in ["none", "nan"]: return ""
     return cleaned
 
+def format_charge(val):
+    v = safe_str(val)
+    if v in ['0', '0.0', '-', '--']: return ""
+    return v
+
 def safe_float(val):
     try:
         return float(str(val).replace(",", "").replace("₹", "").strip())
@@ -138,18 +143,18 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                 data["Sell_Rate"] = data.get("Sell Rate")
 
                 # Charges
-                data["Freight"] = data.get("Freight", "")
-                data["LR"] = data.get("LR", "")
-                data["DD"] = data.get("DD", "")
-                data["GC"] = data.get("GC", "")
-                data["Taxable_Amt"] = data.get("Taxable Amt")
+                data["Freight"] = format_charge(data.get("Freight"))
+                data["LR"] = format_charge(data.get("LR"))
+                data["DD"] = format_charge(data.get("DD"))
+                data["GC"] = format_charge(data.get("GC"))
+                data["Taxable_Amt"] = format_charge(data.get("Taxable Amt"))
 
-                data["AOC"] = data.get("AOC") or data.get(" AOC ") or ""
-                data["special_delivery_charge"] = data.get("special delivery charge") or data.get(" special delivery charge ") or ""
-                data["ODA"] = data.get("ODA") or data.get(" ODA ") or ""
-                data["local_charges"] = data.get("local charge") or data.get(" local charge ") or ""
-                data["unloading"] = data.get("Unloading at client location") or data.get(" Unloading at client location ") or ""
-                data["toll_charge"] = data.get("Toll charges") or data.get(" Toll charges ") or data.get("Toll Charge") or data.get(" Toll Charge ") or ""
+                data["AOC"] = format_charge(data.get("AOC") or data.get(" AOC "))
+                data["special_delivery_charge"] = format_charge(data.get("special delivery charge") or data.get(" special delivery charge "))
+                data["ODA"] = format_charge(data.get("ODA") or data.get(" ODA "))
+                data["local_charges"] = format_charge(data.get("local charge") or data.get(" local charge "))
+                data["unloading"] = format_charge(data.get("Unloading at client location") or data.get(" Unloading at client location "))
+                data["toll_charge"] = format_charge(data.get("Toll charges") or data.get(" Toll charges ") or data.get("Toll Charge") or data.get(" Toll Charge "))
 
                 # Plant info
                 data["plant_address"] = data.get("plant_Address")
