@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, WebSocket, WebSocketDisconnect, BackgroundTasks
+from fastapi import FastAPI, UploadFile, File, WebSocket, WebSocketDisconnect, BackgroundTasks, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import os
@@ -29,7 +29,8 @@ sessions = {}
 @app.post("/upload")
 async def upload_files(
     csv_file: UploadFile = File(...),
-    vouchers: list[UploadFile] = File(...)
+    vouchers: list[UploadFile] = File(...),
+    include_unmerged: str = Form("false")
 ):
     session_id = str(uuid.uuid4())
     temp_dir = os.path.join(tempfile.gettempdir(), f"arc_upload_{session_id}")
@@ -52,7 +53,8 @@ async def upload_files(
     sessions[session_id] = {
         "csv_path": csv_path,
         "vouchers_dir": vouchers_dir,
-        "zip_path": None
+        "zip_path": None,
+        "include_unmerged": include_unmerged
     }
     
     return {"session_id": session_id}
@@ -69,13 +71,15 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
     session_data = sessions[session_id]
     
     try:
+        include_unmerged_bool = session_data.get("include_unmerged", "false").lower() == "true"
         # Run automation generator
         generator = process_automation(
             master_csv_path=session_data["csv_path"],
             plant_csv_path=PLANT_DATA_PATH,
             vouchers_dir=session_data["vouchers_dir"],
             base_dir=BASE_DIR,
-            session_id=session_id
+            session_id=session_id,
+            include_unmerged=include_unmerged_bool
         )
         
         for msg in generator:

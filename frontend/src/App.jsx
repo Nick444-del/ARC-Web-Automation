@@ -10,6 +10,7 @@ const WS_BASE = import.meta.env.VITE_WS_URL || 'ws:https://arc-web-automation.on
 function App() {
   const [csvFile, setCsvFile] = useState([]);
   const [vouchers, setVouchers] = useState([]);
+  const [includeUnmerged, setIncludeUnmerged] = useState(false);
   const [status, setStatus] = useState('idle'); 
   const [logs, setLogs] = useState([]);
   const [downloadUrl, setDownloadUrl] = useState(null);
@@ -30,6 +31,7 @@ function App() {
 
     const formData = new FormData();
     formData.append('csv_file', csvFile[0]);
+    formData.append('include_unmerged', includeUnmerged.toString());
     vouchers.forEach(file => {
       formData.append('vouchers', file);
     });
@@ -116,6 +118,19 @@ function App() {
             files={vouchers}
             onDrop={setVouchers}
           />
+
+          <div className="flex items-center gap-3 py-2 px-1">
+            <button 
+              type="button" 
+              onClick={() => setIncludeUnmerged(!includeUnmerged)}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${includeUnmerged ? 'bg-black' : 'bg-gray-300'}`}
+            >
+              <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${includeUnmerged ? 'translate-x-6' : 'translate-x-1'}`} />
+            </button>
+            <span className="text-sm font-medium text-gray-700 cursor-pointer select-none" onClick={() => setIncludeUnmerged(!includeUnmerged)}>
+              Include invoices with missing vouchers
+            </span>
+          </div>
 
           <div className="mt-auto pt-4 border-t border-gray-200">
             {status === 'idle' || status === 'error' ? (

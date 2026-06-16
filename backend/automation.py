@@ -70,7 +70,7 @@ def amount_to_words(amount):
 # ============================================================
 # AUTOMATION GENERATOR
 # ============================================================
-def process_automation(master_csv_path, plant_csv_path, vouchers_dir, base_dir, session_id):
+def process_automation(master_csv_path, plant_csv_path, vouchers_dir, base_dir, session_id, include_unmerged=False):
     """
     Yields progress strings. 
     At the end, yields a dict with the path to the final zip file.
@@ -217,7 +217,11 @@ def process_automation(master_csv_path, plant_csv_path, vouchers_dir, base_dir, 
                     merger.close()
                     yield f"✅ Merged with voucher: {os.path.basename(voucher_path)}"
                 else:
-                    yield f"⚠️ Skipped: No voucher found for {invoice_name} (CnNo: {cn_no}, Bill No: {bill_no})"
+                    if include_unmerged:
+                        yield f"⚠️ No voucher found for {invoice_name}. Including unmerged invoice."
+                        shutil.copy(invoice_path, os.path.join(merged_pdfs_dir, f"{invoice_name}.pdf"))
+                    else:
+                        yield f"⚠️ Skipped: No voucher found for {invoice_name} (CnNo: {cn_no}, Bill No: {bill_no})"
 
             except Exception as e:
                 yield f"❌ Error on row {index + 1}: {e}"
