@@ -4,8 +4,8 @@ import { DropZone } from './components/DropZone';
 import { ProgressTracker } from './components/ProgressTracker';
 import { FileDown, Play, RefreshCw, Layers } from 'lucide-react';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-const WS_BASE = import.meta.env.VITE_WS_URL || 'ws://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://arc-web-automation.onrender.com';
+const WS_BASE = import.meta.env.VITE_WS_URL || 'ws:https://arc-web-automation.onrender.com';
 
 function App() {
   const [csvFile, setCsvFile] = useState([]);
