@@ -1,10 +1,10 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { UploadCloud, FileText } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-export function cn(...inputs) {
+function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 

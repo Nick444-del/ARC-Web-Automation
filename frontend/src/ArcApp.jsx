@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import axios from 'axios';
 import { DropZone } from './components/DropZone';
 import { ProgressTracker } from './components/ProgressTracker';
