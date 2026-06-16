@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-size: 10px;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .invoice-box {
+            max-width: 850px;
+            margin: auto;
+            padding: 12px;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #0b3d91;
+            color: #fff;
+            padding: 5px;
+            font-weight: 500;
+            font-size: 10px;
+        }
+
+        td {
+            padding: 4px 6px;
+            vertical-align: top;
+            font-size: 10px;
+            line-height: 1.3;
+        }
+
+        .no-border {
+            border: none !important;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .company-details {
+            font-size: 10px;
+            text-align: left;
+            padding-left: 10px;
+            line-height: 1.3;
+            vertical-align: top;
+        }
+
+        .bill-to-address {
+            word-break: break-word;
+            line-height: 1.3;
+        }
+
+        .section {
+            margin-top: 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f1f5f9;
+            padding: 4px 6px;
+            font-weight: 600;
+            font-size: 10px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            padding: 6px;
+        }
+
+        .total-box {
+            border: 2px solid #0b3d91;
+            border-radius: 5px;
+        }
+
+        .highlight {
+            background: #f8fafc;
+            font-weight: 600;
+        }
+
+        ul {
+            margin: 3px 0 0 14px;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+
+        .approval-box td {
+            padding: 8px;
+            font-size: 10px;
+        }
+
+        .approval-box strong {
+            color: #0b3d91;
+        }
+
+        h2 {
+            font-size: 18px;
+        }
+
+        img {
+            max-width: 110px !important;
+        }
+
+        @page {
+            size: A4;
+            margin: 5mm;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="invoice-box">
+
+        <!-- HEADER -->
+        <table>
+            <tr>
+
+                <!-- LOGO -->
+                <td class="no-border" style="width:30%;">
+                    <img src="logo.jpg">
+                </td>
+
+                <!-- TITLE -->
+                <td class="no-border text-center" style="width:40%;">
+                    <h2 style="margin:0; color:#0b3d91;">
+                        TAX INVOICE
+                    </h2>
+                </td>
+
+                <!-- COMPANY DETAILS -->
+                <td class="no-border company-details" style="width:30%;">
+
+                    <div style="white-space: nowrap; font-weight: 600;">
+                        WOWTRUCK TECHNOLOGIES PVT LTD
+                    </div>
+
+                    Head Office<br>
+
+                    410-412 Solaris 2, L&T Gate No. 6,<br>
+
+                    Saki Vihar Road, Mumbai - 400072<br>
+
+                    Email: finance@wowtruck.in<br>
+
+                    GSTIN: 27AAECE0871E1ZV
+
+                </td>
+
+            </tr>
+        </table>
+
+        <!-- BILL TO -->
+        <div class="section">
+
+            <table>
+                <tr>
+
+                    <td>
+
+                        <div class="section-header">
+                            Bill To
+                        </div>
+
+                        <b>
+                            DORF-KETAL CHEMICALS INDIA LIMITED
+                        </b>
+
+                        <br><br>
+
+                        <div class="bill-to-address">
+
+                            <strong>Address:</strong>
+
+                            {{ plant_address }}
+
+                        </div>
+
+                        <br>
+
+                        <strong>GST:</strong> {{ plant_gst }}
+
+                        <br>
+
+                        <strong>Customer ID:</strong> {{ plant_customer_id }}
+
+                    </td>
+
+                </tr>
+            </table>
+
+        </div>
+
+        <!-- INVOICE DETAILS -->
+        <div class="section">
+
+            <div class="section-header">
+                Invoice Details
+            </div>
+
+            <div class="grid-2">
+
+                <div>
+
+                    Invoice No: {{ invoice_no }}<br>
+
+                    Invoice Date: {{ Invoice_Dt }}<br>
+
+                    Dom No: {{ Dorf_no }}<br>
+
+                    Product Code: {{ Product_code }}<br>
+
+                    LUT no: 27AAECE0871E1ZV / 01-Apr-2026 <br>
+
+                    {% if pickup and pickup|trim not in ['None', 'none', 'nan', ''] %}
+                    Pickup: {{ pickup }} <br>
+                    {% endif %}
+
+                    {% if Drop and Drop|trim not in ['None', 'none', 'nan', ''] %}
+                    Drop: {{ Drop }} <br>
+                    {% endif %}
+
+                </div>
+
+                <div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- APPROVAL PERSONS -->
+        <div class="section approval-box">
+
+            <table>
+
+                <tr>
+
+                    <td style="width:50%;">
+
+                        <strong>1st Approval Person</strong><br>
+
+                        ARUN RANIKAR
+
+                    </td>
+
+                    <td style="width:50%;">
+
+                        <strong>2nd Approval Person</strong><br>
+
+                        SANTOSH CHAVAN
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+        <!-- CHARGES -->
+        <div class="section">
+
+            <table>
+
+                <tr>
+                    <th>Description</th>
+                    <th class="text-center">HSN</th>
+                    <th class="text-end">Amount (₹)</th>
+                </tr>
+
+                {% if Freight and Freight|trim not in ['0', '0.0', 'None', 'none', 'nan', ''] %}
+                <tr>
+
+                    <td>
+                        Freight
+
+                        {% if Actual_Wt and Sell_Rate %}
+                        <small>
+                            ({{ Actual_Wt }} * {{ Sell_Rate }})
+                        </small>
+                        {% endif %}
+                    </td>
+
+                    <td class="text-center">
+                        996511
+                    </td>
+
+                    <td class="text-end">
+                        ₹{{ Freight }}
+                    </td>
+
+                </tr>
+                {% endif %}
+
+                {% if DD and DD|trim not in ['0', '0.0', 'None', 'none', 'nan', ''] %}
+                <tr>
+
+                    <td>Door Delivery</td>
+
+                    <td class="text-center">
+                        996511
+                    </td>
+
+                    <td class="text-end">
+                        ₹{{ DD }}
+                    </td>
+
+                </tr>
+                {% endif %}
+
+                {% if LR and LR|trim not in ['0', '0.0', 'None', 'none', 'nan', ''] %}
+                <tr>
+
+                    <td>LR Charges</td>
+
+                    <td class="text-center">
+                        996511
+                    </td>
+
+                    <td class="text-end">
+                        ₹{{ LR }}
+                    </td>
+
+                </tr>
+                {% endif %}
+
+                {% if GC and GC|trim not in ['0', '0.0', 'None', 'none', 'nan', ''] %}
+                <tr>
+
+                    <td>GC Charges</td>
+
+                    <td class="text-center">
+                        996511
+                    </td>
+
+                    <td class="text-end">
+                        ₹{{ GC }}
+                    </td>
+
+                </tr>
+                {% endif %}
+
+                {% if local_charges and local_charges|trim not in ['0', '0.0', 'None', 'none', 'nan', ''] %}
+                <tr>
+
+                    <td>Local Charges</td>
+
+                    <td class="text-center">
+                        996511
+                    </td>
+
+                    <td class="text-end">
+                        ₹{{ local_charges }}
+                    </td>
+
+                </tr>
+                {% endif %}
+
+                {% if AOC and AOC|trim not in ['0', '0.0', 'None', 'none', 'nan', ''] %}
+                <tr>
+
+                    <td>AOC Charges</td>
+
+                    <td class="text-center">
+                        996511
+                    </td>
+
+                    <td class="text-end">
+                        ₹{{ AOC }}
+                    </td>
+
+                </tr>
+                {% endif %}
+
+                {% if ODA and ODA|trim not in ['0', '0.0', 'None', 'none', 'nan', ''] %}
+                <tr>
+
+                    <td>ODA Charges</td>
+
+                    <td class="text-center">
+                        996511
+                    </td>
+
+                    <td class="text-end">
+                        ₹{{ ODA }}
+                    </td>
+
+                </tr>
+                {% endif %}
+
+                {% if toll_charge and toll_charge|trim not in ['0', '0.0', 'None', 'none', 'nan', ''] %}
+                <tr>
+
+                    <td>Toll Charges</td>
+
+                    <td class="text-center">
+                        996511
+                    </td>
+
+                    <td class="text-end">
+                        ₹{{ toll_charge }}
+                    </td>
+
+                </tr>
+                {% endif %}
+
+                {% if unloading and unloading|trim not in ['0', '0.0', 'None', 'none', 'nan', ''] %}
+                <tr>
+
+                    <td>Unloading Charges</td>
+
+                    <td class="text-center">
+                        996511
+                    </td>
+
+                    <td class="text-end">
+                        ₹{{ unloading }}
+                    </td>
+
+                </tr>
+                {% endif %}
+
+                {% if special_delivery_charge and special_delivery_charge|trim not in ['0', '0.0', 'None', 'none', 'nan', ''] %}
+                <tr>
+
+                    <td>Special Delivery Charges</td>
+
+                    <td class="text-center">
+                        996511
+                    </td>
+
+                    <td class="text-end">
+                        ₹{{ special_delivery_charge }}
+                    </td>
+
+                </tr>
+                {% endif %}
+
+            </table>
+
+        </div>
+
+        <!-- TOTALS -->
+        <div class="section total-box">
+
+            <table>
+
+                <tr>
+
+                    <td>
+                        Subtotal
+                    </td>
+
+                    <td class="text-end">
+                        ₹{{ subtotal_amount }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>
+                        IGST 18%
+                    </td>
+
+                    <td class="text-end">
+                        ₹{{ GST }}
+                    </td>
+
+                </tr>
+
+                <tr class="highlight">
+
+                    <td>
+                        <b>Total</b>
+                    </td>
+
+                    <td class="text-end">
+                        <b>₹{{ Total_Amount }}</b>
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td colspan="2">
+
+                        Amount in Words:
+
+                        {{ Total_Amount_words }}
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="section">
+
+            <table>
+
+                <tr>
+
+                    <td class="no-border">
+
+                        <strong>
+                            Declaration:
+                        </strong>
+
+                        <ul>
+
+                            <li>
+                                We are registered under Forward Charge Mechanism.
+                                All delayed payments will attract interest as per MSME Act 2006.
+                            </li>
+
+                            <li>
+                                Please contact us within 3 days for discrepancies, if any.
+                            </li>
+
+                            <li>
+                                We are not required to prepare an E-Invoice as per CGST Notification
+                                No. 14/22 dated 06/07/2022.
+                            </li>
+
+                            <li>
+                                We reserve the right to charges interest at the @ 24% p.a.
+                                If the bill remains unpaid after due date.
+                            </li>
+
+                        </ul>
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
