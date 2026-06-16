@@ -91,26 +91,26 @@ export function HmcApp() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-transparent flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="w-full max-w-5xl mb-8 text-center">
         <div className="inline-flex items-center justify-center p-3 bg-black rounded-full mb-4 shadow-lg">
           <Layers className="h-8 w-8 text-white" />
         </div>
-        <h1 className="text-3xl font-light text-black tracking-tight">HMC <span className="font-semibold">Automation</span></h1>
-        <p className="mt-3 text-lg text-gray-500">Generate and merge your HMC invoices instantly</p>
+        <h1 className="text-3xl font-light text-black dark:text-white tracking-tight">HMC <span className="font-semibold">Automation</span></h1>
+        <p className="mt-3 text-lg text-gray-500 dark:text-gray-400">Generate and merge your HMC invoices instantly</p>
       </div>
 
       {/* Main Content */}
       <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Left Column: Uploads */}
-        <div className="bg-white rounded-2xl p-6 flex flex-col gap-6 shadow-xl border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 flex flex-col gap-6 shadow-xl border border-gray-200 dark:border-gray-800">
           <DropZone 
             title={
               <div className="flex justify-between items-center">
                 <span>1. Master Data (CSV)</span>
-                <a href="/sample_hmc.csv" download className="text-xs text-gray-500 hover:text-black underline font-normal">
+                <a href="/sample_hmc.csv" download className="text-xs text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white underline font-normal">
                   Download Sample CSV
                 </a>
               </div>
@@ -134,11 +134,11 @@ export function HmcApp() {
               <button 
                 type="button" 
                 onClick={() => setIncludeUnmerged(!includeUnmerged)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${includeUnmerged ? 'bg-black' : 'bg-gray-300'}`}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${includeUnmerged ? 'bg-black dark:bg-white' : 'bg-gray-300 dark:bg-gray-700'}`}
               >
-                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${includeUnmerged ? 'translate-x-6' : 'translate-x-1'}`} />
+                <span className={`inline-block h-4 w-4 transform rounded-full bg-white dark:bg-black transition-transform ${includeUnmerged ? 'translate-x-6' : 'translate-x-1'}`} />
               </button>
-              <span className="text-sm font-medium text-gray-700 cursor-pointer select-none" onClick={() => setIncludeUnmerged(!includeUnmerged)}>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer select-none" onClick={() => setIncludeUnmerged(!includeUnmerged)}>
                 Include invoices with missing vouchers
               </span>
             </div>
@@ -147,17 +147,17 @@ export function HmcApp() {
               <button 
                 type="button" 
                 onClick={() => setRemoveFirstPage(!removeFirstPage)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${removeFirstPage ? 'bg-black' : 'bg-gray-300'}`}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${removeFirstPage ? 'bg-black dark:bg-white' : 'bg-gray-300 dark:bg-gray-700'}`}
               >
-                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${removeFirstPage ? 'translate-x-6' : 'translate-x-1'}`} />
+                <span className={`inline-block h-4 w-4 transform rounded-full bg-white dark:bg-black transition-transform ${removeFirstPage ? 'translate-x-6' : 'translate-x-1'}`} />
               </button>
-              <span className="text-sm font-medium text-gray-700 cursor-pointer select-none" onClick={() => setRemoveFirstPage(!removeFirstPage)}>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer select-none" onClick={() => setRemoveFirstPage(!removeFirstPage)}>
                 Remove 1st page from vouchers
               </span>
             </div>
           </div>
 
-          <div className="mt-auto pt-4 border-t border-gray-200">
+          <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-800">
             {status === 'idle' || status === 'error' ? (
               <button 
                 onClick={handleStart}

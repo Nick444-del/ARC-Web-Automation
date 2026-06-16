@@ -8,7 +8,7 @@ import { HmcApp } from './HmcApp';
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
+      <div className="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden font-sans">
         <Sidebar />
         <main className="flex-1 overflow-y-auto">
           <Routes>
