@@ -104,7 +104,14 @@ function App() {
         {/* Left Column: Uploads */}
         <div className="bg-white rounded-2xl p-6 flex flex-col gap-6 shadow-xl border border-gray-200">
           <DropZone 
-            title="1. Master Data (CSV)" 
+            title={
+              <div className="flex justify-between items-center">
+                <span>1. Master Data (CSV)</span>
+                <a href="/sample_master.csv" download className="text-xs text-gray-500 hover:text-black underline font-normal">
+                  Download Sample CSV
+                </a>
+              </div>
+            }
             accept={{ 'text/csv': ['.csv'] }} 
             maxFiles={1}
             files={csvFile}
