@@ -94,7 +94,7 @@ export function ArcApp() {
         <div className="inline-flex items-center justify-center p-3 bg-black rounded-full mb-4 shadow-lg">
           <Layers className="h-8 w-8 text-white" />
         </div>
-        <h1 className="text-4xl font-extrabold text-black tracking-tight">ARC Invoice Automation</h1>
+        <h1 className="text-4xl font-extrabold text-black tracking-tight">ARC Automation</h1>
         <p className="mt-3 text-lg text-gray-500">Generate and merge your invoices instantly</p>
       </div>
 
