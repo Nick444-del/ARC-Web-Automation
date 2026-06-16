@@ -161,7 +161,7 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                 year = current_date.strftime("%y")
                 
                 # Check custom Invoice No overriding from user specification
-                custom_invoice_no = data.get("Invoice No")
+                custom_invoice_no = data.get("Invoice No.1") or data.get("Invoice No.2") or data.get("Invoice No")
                 if custom_invoice_no and str(custom_invoice_no).lower() != "nan" and str(custom_invoice_no).strip() != "":
                     invoice_no = str(custom_invoice_no).strip()
                 else:
