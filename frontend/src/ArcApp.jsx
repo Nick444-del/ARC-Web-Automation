@@ -184,4 +184,4 @@ export function ArcApp() {
   );
 }
 
-export default App;
+
