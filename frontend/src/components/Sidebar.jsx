@@ -43,6 +43,19 @@ export function Sidebar() {
             </div>
           )}
         </NavLink>
+        
+        <NavLink 
+          to="/hmc" 
+          className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-black text-white shadow-md' : 'text-gray-600 hover:bg-gray-100 hover:text-black'}`}
+          title="HMC Invoice Portal"
+        >
+          <Layers size={24} className="shrink-0" />
+          {!collapsed && (
+            <div className="flex flex-col overflow-hidden">
+              <span className="font-medium whitespace-nowrap">HMC Invoices</span>
+            </div>
+          )}
+        </NavLink>
       </nav>
       
       {!collapsed && (
