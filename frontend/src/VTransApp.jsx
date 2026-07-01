@@ -11,6 +11,7 @@ export function VTransApp() {
   const [csvFile, setCsvFile] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [includeUnmerged, setIncludeUnmerged] = useState(false);
+  const [invoiceDate, setInvoiceDate] = useState('');
   const [status, setStatus] = useState('idle'); 
   const [logs, setLogs] = useState([]);
   const [downloadUrl, setDownloadUrl] = useState(null);
@@ -32,6 +33,13 @@ export function VTransApp() {
     const formData = new FormData();
     formData.append('csv_file', csvFile[0]);
     formData.append('include_unmerged', includeUnmerged.toString());
+    // Format date as dd-mm-yyyy for the backend, or send empty string
+    if (invoiceDate) {
+      const [year, month, day] = invoiceDate.split('-');
+      formData.append('invoice_date', `${day}-${month}-${year}`);
+    } else {
+      formData.append('invoice_date', '');
+    }
     vouchers.forEach(file => {
       formData.append('vouchers', file);
     });
@@ -82,6 +90,7 @@ export function VTransApp() {
   const reset = () => {
     setCsvFile([]);
     setVouchers([]);
+    setInvoiceDate('');
     setStatus('idle');
     setLogs([]);
     setDownloadUrl(null);
@@ -125,6 +134,19 @@ export function VTransApp() {
             files={vouchers}
             onDrop={setVouchers}
           />
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Invoice Date
+              <span className="ml-2 text-xs font-normal text-gray-400 dark:text-gray-500">(leave empty to use today's date)</span>
+            </label>
+            <input
+              type="date"
+              value={invoiceDate}
+              onChange={e => setInvoiceDate(e.target.value)}
+              className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition"
+            />
+          </div>
 
           <div className="flex items-center gap-3 py-2 px-1">
             <button 

@@ -86,7 +86,7 @@ def amount_to_words(amount):
 # ============================================================
 # AUTOMATION GENERATOR
 # ============================================================
-def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, base_dir, session_id, include_unmerged=False):
+def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, base_dir, session_id, include_unmerged=False, invoice_date=None):
     """
     Yields progress strings. 
     At the end, yields a dict with the path to the final zip file.
@@ -161,7 +161,14 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                 data["plant_gst"] = data.get("plant_GST No")
                 data["plant_customer_id"] = data.get("plant_Customer ID")
 
-                current_date = datetime.now()
+                # Use user-supplied invoice date if provided, otherwise fall back to today
+                if invoice_date:
+                    try:
+                        current_date = datetime.strptime(invoice_date, "%d-%m-%Y")
+                    except ValueError:
+                        current_date = datetime.now()
+                else:
+                    current_date = datetime.now()
                 month = current_date.strftime("%m")
                 year = current_date.strftime("%y")
                 

@@ -33,7 +33,8 @@ async def upload_files(
     csv_file: UploadFile = File(...),
     vouchers: list[UploadFile] = File(...),
     include_unmerged: str = Form("false"),
-    remove_first_page: str = Form("true")
+    remove_first_page: str = Form("true"),
+    invoice_date: str = Form("")
 ):
     session_id = str(uuid.uuid4())
     temp_dir = os.path.join(tempfile.gettempdir(), f"arc_upload_{session_id}")
@@ -58,7 +59,8 @@ async def upload_files(
         "vouchers_dir": vouchers_dir,
         "zip_path": None,
         "include_unmerged": include_unmerged,
-        "remove_first_page": remove_first_page
+        "remove_first_page": remove_first_page,
+        "invoice_date": invoice_date
     }
     
     return {"session_id": session_id}
@@ -112,13 +114,15 @@ async def vtrans_websocket_endpoint(websocket: WebSocket, session_id: str):
     
     try:
         include_unmerged_bool = session_data.get("include_unmerged", "false").lower() == "true"
+        invoice_date_str = session_data.get("invoice_date", "") or None
         generator = process_vtrans_automation(
             master_csv_path=session_data["csv_path"],
             plant_csv_path=PLANT_DATA_PATH,
             vouchers_dir=session_data["vouchers_dir"],
             base_dir=BASE_DIR,
             session_id=session_id,
-            include_unmerged=include_unmerged_bool
+            include_unmerged=include_unmerged_bool,
+            invoice_date=invoice_date_str
         )
         
         for msg in generator:
