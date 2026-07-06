@@ -152,7 +152,7 @@ def process_automation(master_csv_path, plant_csv_path, vouchers_dir, base_dir, 
                 data["sell_rate"] = data.get("Sell Rate", "")
                 data["other_charges"] = data.get("other charges") or data.get("Other Charges") or data.get("Other charges") or ""
                 data["toll_charge"] = data.get("Toll Charge") or data.get("toll charge") or data.get("Toll charge") or ""
-                data["unloading"] = data.get("Unloading") or data.get("unloading") or data.get("Unloading Charges") or ""
+                data["unloading"] = next((v for k, v in data.items() if "unload" in str(k).lower()), "")
                 data["special_delivery_charge"] = data.get("Special Delivery Charge") or data.get("special delivery charge") or data.get("Special delivery charge") or ""
 
                 # Plant Details

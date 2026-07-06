@@ -154,8 +154,8 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                 data["AOC"] = format_charge(data.get("AOC") or data.get(" AOC "))
                 data["special_delivery_charge"] = format_charge(data.get("special delivery charge") or data.get(" special delivery charge "))
                 data["ODA"] = format_charge(data.get("ODA") or data.get(" ODA "))
-                data["local_charges"] = format_charge(data.get("local charge") or data.get(" local charge "))
-                data["unloading"] = format_charge(data.get("Unloading at client location") or data.get(" Unloading at client location ") or data.get("Unloading") or data.get("unloading") or data.get("Unloading Charges"))
+                data["local_charges"] = format_charge(next((v for k, v in data.items() if "local" in str(k).lower() and "charge" in str(k).lower()), None) or data.get("local charge") or data.get("Local Charges"))
+                data["unloading"] = format_charge(next((v for k, v in data.items() if "unload" in str(k).lower()), None))
                 data["toll_charge"] = format_charge(data.get("Toll charges") or data.get(" Toll charges ") or data.get("Toll Charge") or data.get(" Toll Charge "))
 
                 # Plant info

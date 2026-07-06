@@ -205,7 +205,7 @@ def process_hmc_automation(master_csv_path, plant_csv_path, vouchers_dir, base_d
                     'Particulars1': row_data.get('plant_Particulars1', ''),
                     'vessel_flight_no': row_data.get('Vessel/Flight No.', ''),
                     'Trans_Form': row_data.get('Trasn Form', ''),
-                    'Unloading_charges': row_data.get('Unloading Charges', ''),
+                    'Unloading_charges': next((v for k, v in row_data.items() if 'unload' in str(k).lower()), ''),
                     'Additional_Toll': row_data.get('Additional Toll', ''),
                     'Addiotional_Cost_Info': row_data.get('Addiotional Cost Info', ''),
                     'dsc_path': os.path.join(base_dir, 'DSC.png'),  # Included just in case
