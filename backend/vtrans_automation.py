@@ -97,10 +97,12 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
         # Load Data
         yield "Loading CSV data..."
         data_df = read_csv_safe(master_csv_path)
+        data_df = data_df.dropna(how='all')
         data_df = clean_columns(data_df)
         data_df = data_df.apply(lambda col: col.map(safe_str))
 
         plant_df = read_csv_safe(plant_csv_path)
+        plant_df = plant_df.dropna(how='all')
         plant_df = clean_columns(plant_df)
         plant_df = plant_df.apply(lambda col: col.map(safe_str))
 
