@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 10px;
+            border: 1px solid #000;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 4px;
+            vertical-align: top;
+        }
+
+        .no-border {
+            border: none !important;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .signature-box {
+            font-style: italic;
+            text-align: right;
+            padding-top: 30px;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
+        /* Dynamic narration styles */
+        .narration-container {
+            padding: 8px;
+            min-height: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ffffff;
+            border-radius: 4px;
+        }
+
+        .narration-line {
+            margin-bottom: 4px;
+            padding: 2px 4px;
+            border-left: 3px solid #4a90e2;
+            background-color: #f0f7ff;
+        }
+
+        .narration-line:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-box">
+        <!-- Header Section -->
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="vertical-align: top;">
+                <!-- Logo -->
+                <td class="no-border" style="width: 30%;">
+                    <img src="logo.jpg" alt="WOWTRUCK Logo"
+                        style="max-width: 100%; height: auto; display: block; margin: 5px;" />
+                </td>
+
+                <!-- Title -->
+                <td class="no-border text-center" style="width: 40%; vertical-align: middle;">
+                    <h4 style="margin: 0; text-decoration: underline;">TAX INVOICE</h4>
+                </td>
+
+                <!-- Company Info -->
+                <td class="no-border text-end" style="width: 30%; font-size: 12px;">
+                    <strong>WOWTRUCK TECHNOLOGIES PVT LTD</strong><br>
+                    Head Office<br>
+                    410-412 Solaris 2, L&T Gate No. 6,<br>
+                    Saki Vihar Road, Mumbai - 400072<br>
+                    <span style="font-weight: normal;">Email:</span> finance@wowtruck.in<br>
+                    <span style="font-weight: normal;">GSTIN:</span> {{ gstin_uin }}<br>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Party Info -->
+        <table style="width: 100%; margin-top: 10px;">
+            <tr>
+                <td style="width: 50%;">
+                    <small><strong>To</strong></small><br>
+                    <b>DORF-KETAL CHEMICALS INDIA LIMITED</b><br>
+                    Address: {{ plant_address }}<br>
+                    GSTIN: {{ plant_gst }}<br>
+                    Customer ID: {{ plant_customer_id }}
+                    <span style="font-weight: normal;">LUT/Bond No. : AD270425001803D</span><br>
+                    <span style="font-weight: normal;">From: 01-02-2025 To: 31-03-2026</span><br>
+                </td>
+                <td>
+                    <small><strong>Consignee (Ship to)</strong></small><br>
+                    <b>DORF-KETAL CHEMICALS INDIA LIMITED</b><br>
+                    Address: {{ plant_address }}<br>
+                    GSTIN: {{ plant_gst }}<br>
+                    Customer ID: {{ plant_customer_id }}
+                </td>
+            </tr>
+        </table>
+
+        <!-- Invoice Info -->
+        <table style="width: 100%; margin-top: 10px;">
+            <tr>
+                <td style="width: 50%;">
+                    Invoice No: {{ invoice_no }}<br>
+                    Invoice Date: {{ date }}<br>
+                    Booking ID: {{ booking_no }}<br>
+                    Delivery Note: {{ delivery_note_no_date }}<br>
+                    Mode: {{ terms_of_payment }}<br>
+                    Voucher Ref: {{ Voucher_Ref_No }}<br>
+                    Voucher No: {{ Voucher_no }}<br>
+                    Reference No. & Date: {{ Voucher_Type }}
+                </td>
+                <td>
+                    Other Reference: {{ Other_References }}<br>
+                    Dispatch Through: {{ dispatch_through }}<br>
+                    Destination: {{ Destination }}<br>
+                    Vessel/Flight No: {{ vessel_flight_no }}<br>
+                    Order Date: {{ Order_No_and_Date }}<br>
+                    Port of Loading: {{ Port_of_Loading }}<br>
+                    Port of Discharge: {{ Port_of_Discharge }}
+                </td>
+            </tr>
+        </table>
+
+        <!-- Service Info -->
+        <table style="width: 100%; margin-top: 10px;">
+            <tr>
+                <th colspan="3">DESCRIPTION OF SERVICES</th>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <strong>Narration:</strong>
+                    <div class="narration-container" id="narration-container">
+                        <!-- Dynamic narration lines will be inserted here -->
+                        {{Narration}}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">Approver: {{ Terms_of_Delivery }}</td>
+            </tr>
+        </table>
+
+        <!-- Charges Table -->
+        <table style="width: 100%; margin-top: 10px;">
+            <tr>
+                <th style="width: 50%;">Description</th>
+                <th style="width: 25%;">HSN Code</th>
+                <th style="width: 25%;" class="text-end">Amount (₹)</th>
+            </tr>
+
+            {% if Transport|trim and Transport != '0' %}
+            <tr>
+                <td>{{ Particulars1 }} <small>{{ Trans_Form }}</small></td>
+                <td class="text-center">996511</td>
+                <td class="text-end">₹{{ Transport }}</td>
+            </tr>
+            {% endif %}
+
+            {% if Loading_charges|trim and Loading_charges != '0' %}
+            <tr>
+                <td>Loading Charges</td>
+                <td class="text-center">996511</td>
+                <td class="text-end">₹{{ Loading_charges }}</td>
+            </tr>
+            {% endif %}
+
+            {% if Unloading_charges|trim and Unloading_charges != '0' %}
+            <tr>
+                <td>Un-Loading Charges</td>
+                <td class="text-center">996511</td>
+                <td class="text-end">₹{{ Unloading_charges }}</td>
+            </tr>
+            {% endif %}
+
+            {% if additional_cost|trim and additional_cost != '0' %}
+            <tr>
+                <td>Additional Cost</td>
+                <td class="text-center">996511</td>
+                <td class="text-end">₹{{ additional_cost }}</td>
+            </tr>
+            {% endif %}
+
+            {% if Additional_Toll|trim and Additional_Toll != '0' %}
+            <tr>
+                <td>Gatepass / Toll Charges</td>
+                <td class="text-center">996799</td>
+                <td class="text-end">₹{{ Additional_Toll }}</td>
+            </tr>
+            {% endif %}
+
+            {% if Detention|trim and Detention != '0' %}
+            <tr>
+                <td>Detention</td>
+                <td class="text-center">996511</td>
+                <td class="text-end">₹{{ Detention }}</td>
+            </tr>
+            {% endif %}
+        </table>
+
+        <!-- Tax Section -->
+        <table style="width: 100%; margin-top: 10px;">
+            <tr>
+                <td>CGST 9%</td>
+                <td class="text-end">₹{{ CGST }}</td>
+            </tr>
+            <tr>
+                <td>SGST 9%</td>
+                <td class="text-end">₹{{ SGST }}</td>
+            </tr>
+            <tr>
+                <td>IGST 18%</td>
+                <td class="text-end">₹{{ IGST }}</td>
+            </tr>
+        </table>
+
+        <!-- Total -->
+        <table style="width: 100%; margin-top: 10px;">
+            <tr>
+                <td><strong>Total:</strong></td>
+                <td class="text-end"><strong>₹{{ Total_Amount }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="2">Amount in Words: {{ Total_Amount_words }}</td>
+            </tr>
+        </table>
+
+        <!-- Declaration & Signature -->
+        <table style="width: 100%; margin-top: 20px; border: none;">
+            <tr>
+                <td class="no-border" style="width: 70%;">
+                    <strong>Declaration:</strong>
+                    <ul>
+                        <li>We are registered under Forward Charge Mechanism. All delayed payments will attract interest
+                            as per MSME Act 2006.</li>
+                        <li>Please contact us within 3 days for discrepancies, if any. Otherwise, the invoice is deemed
+                            accepted.</li>
+                        <li>We are not required to prepare an E-Invoice as per CGST Notification No. 14/22 dated
+                            06/07/2022.</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        // Function to process narration text and create dynamic lines
+        function processNarration(narrationText) {
+            const container = document.getElementById('narration-container');
+
+            // Clear existing content
+            container.innerHTML = '';
+
+            if (!narrationText || narrationText.trim() === '') {
+                container.innerHTML = '<div class="narration-line">No narration provided</div>';
+                return;
+            }
+
+            // Split by new lines or other delimiters as needed
+            const lines = narrationText.split('\n').filter(line => line.trim() !== '');
+
+            if (lines.length === 0) {
+                container.innerHTML = '<div class="narration-line">No narration provided</div>';
+                return;
+            }
+
+            // Create a div for each line
+            lines.forEach(line => {
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'narration-line';
+                lineDiv.textContent = line.trim();
+                container.appendChild(lineDiv);
+            });
+        }
+
+        // Example usage with sample data
+        // In your actual implementation, you would get this from your template engine
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sample narration data - replace with your actual data
+            const sampleNarration = `Transportation of goods from Mumbai to Delhi
+            Special handling required for fragile items
+            Delivery to be completed within 48 hours
+            Additional documentation required for customs clearance`;
+
+            processNarration(sampleNarration);
+        });
+    </script>
+</body>
+
+</html>

@@ -67,6 +67,19 @@ export function Sidebar() {
             </div>
           )}
         </NavLink>
+        
+        <NavLink 
+          to="/exsim" 
+          className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-black dark:bg-white text-white dark:text-black shadow-md' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white'}`}
+          title="EXSIM Invoice Portal"
+        >
+          <Layers size={24} className="shrink-0" />
+          {!collapsed && (
+            <div className="flex flex-col overflow-hidden">
+              <span className="font-medium whitespace-nowrap">EXSIM Invoices</span>
+            </div>
+          )}
+        </NavLink>
       </nav>
       
       <div className="p-4 border-t border-gray-200 dark:border-gray-800">

@@ -10,6 +10,7 @@ import shutil
 from automation import process_automation
 from vtrans_automation import process_vtrans_automation
 from hmc_automation import process_hmc_automation
+from exsim_automation import process_exsim_automation
 
 app = FastAPI()
 
@@ -175,6 +176,43 @@ async def hmc_websocket_endpoint(websocket: WebSocket, session_id: str):
     finally:
         await websocket.close()
 
+@app.websocket("/ws/exsim-progress/{session_id}")
+async def exsim_websocket_endpoint(websocket: WebSocket, session_id: str):
+    await websocket.accept()
+    
+    if session_id not in sessions:
+        await websocket.send_text(json.dumps({"type": "error", "message": "Invalid session ID"}))
+        await websocket.close()
+        return
+        
+    session_data = sessions[session_id]
+    
+    try:
+        include_unmerged_bool = session_data.get("include_unmerged", "false").lower() == "true"
+        remove_first_page_bool = session_data.get("remove_first_page", "true").lower() == "true"
+        generator = process_exsim_automation(
+            master_csv_path=session_data["csv_path"],
+            plant_csv_path=PLANT_DATA_PATH,
+            vouchers_dir=session_data["vouchers_dir"],
+            base_dir=BASE_DIR,
+            session_id=session_id,
+            include_unmerged=include_unmerged_bool,
+            remove_first_page=remove_first_page_bool
+        )
+        
+        for msg in generator:
+            if isinstance(msg, dict) and "zip_path" in msg:
+                session_data["zip_path"] = msg["zip_path"]
+                await websocket.send_text(json.dumps({"type": "complete", "download_url": f"/download/{session_id}"}))
+            else:
+                await websocket.send_text(json.dumps({"type": "progress", "message": str(msg)}))
+                await asyncio.sleep(0.01)
+                
+    except Exception as e:
+        await websocket.send_text(json.dumps({"type": "error", "message": str(e)}))
+    finally:
+        await websocket.close()
+
 @app.get("/download/{session_id}")
 async def download_zip(session_id: str, background_tasks: BackgroundTasks):
     if session_id not in sessions or not sessions[session_id].get("zip_path"):
@@ -198,6 +236,9 @@ async def download_zip(session_id: str, background_tasks: BackgroundTasks):
             hmc_work_dir = os.path.join(tempfile.gettempdir(), f"hmc_{session_id}")
             if os.path.exists(hmc_work_dir):
                 shutil.rmtree(hmc_work_dir)
+            exsim_work_dir = os.path.join(tempfile.gettempdir(), f"exsim_{session_id}")
+            if os.path.exists(exsim_work_dir):
+                shutil.rmtree(exsim_work_dir)
             if session_id in sessions:
                 del sessions[session_id]
         except Exception as e:

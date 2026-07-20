@@ -4,6 +4,7 @@ import { Sidebar } from './components/Sidebar';
 import { ArcApp } from './ArcApp';
 import { VTransApp } from './VTransApp';
 import { HmcApp } from './HmcApp';
+import { ExsimApp } from './ExsimApp';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
             <Route path="/" element={<ArcApp />} />
             <Route path="/vtrans" element={<VTransApp />} />
             <Route path="/hmc" element={<HmcApp />} />
+            <Route path="/exsim" element={<ExsimApp />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
