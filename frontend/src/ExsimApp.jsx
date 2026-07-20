@@ -7,7 +7,7 @@ import { FileDown, Play, RefreshCw, Layers } from 'lucide-react';
 const API_BASE = import.meta.env.VITE_API_URL || 'https://arc-web-automation.onrender.com';
 const WS_BASE = import.meta.env.VITE_WS_URL || 'wss://arc-web-automation.onrender.com';
 
-export function exsimApp() {
+export function ExsimApp() {
   const [csvFile, setCsvFile] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [includeUnmerged, setIncludeUnmerged] = useState(false);
