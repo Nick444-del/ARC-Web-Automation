@@ -192,7 +192,7 @@
                 <th style="width: 25%;" class="text-end">Amount (₹)</th>
             </tr>
 
-            {% if Transport|trim and Transport != '0' %}
+            {% if Transport|trim and Transport not in ['0', '0.0', '0.00'] %}
             <tr>
                 <td>{{ Particulars1 }} <small>{{ Trans_Form }}</small></td>
                 <td class="text-center">996511</td>
@@ -200,7 +200,7 @@
             </tr>
             {% endif %}
 
-            {% if Loading_charges|trim and Loading_charges != '0' %}
+            {% if Loading_charges|trim and Loading_charges not in ['0', '0.0', '0.00'] %}
             <tr>
                 <td>Loading Charges</td>
                 <td class="text-center">996511</td>
@@ -208,7 +208,7 @@
             </tr>
             {% endif %}
 
-            {% if Unloading_charges|trim and Unloading_charges != '0' %}
+            {% if Unloading_charges|trim and Unloading_charges not in ['0', '0.0', '0.00'] %}
             <tr>
                 <td>Un-Loading Charges</td>
                 <td class="text-center">996511</td>
@@ -216,7 +216,7 @@
             </tr>
             {% endif %}
 
-            {% if additional_cost|trim and additional_cost != '0' %}
+            {% if additional_cost|trim and additional_cost not in ['0', '0.0', '0.00'] %}
             <tr>
                 <td>Additional Cost</td>
                 <td class="text-center">996511</td>
@@ -224,7 +224,7 @@
             </tr>
             {% endif %}
 
-            {% if Additional_Toll|trim and Additional_Toll != '0' %}
+            {% if Additional_Toll|trim and Additional_Toll not in ['0', '0.0', '0.00'] %}
             <tr>
                 <td>Gatepass / Toll Charges</td>
                 <td class="text-center">996799</td>
@@ -232,7 +232,7 @@
             </tr>
             {% endif %}
 
-            {% if Detention|trim and Detention != '0' %}
+            {% if Detention|trim and Detention not in ['0', '0.0', '0.00'] %}
             <tr>
                 <td>Detention</td>
                 <td class="text-center">996511</td>
@@ -242,20 +242,28 @@
         </table>
 
         <!-- Tax Section -->
+        {% if (CGST|trim and CGST not in ['0', '0.0', '0.00']) or (SGST|trim and SGST not in ['0', '0.0', '0.00']) or (IGST|trim and IGST not in ['0', '0.0', '0.00']) %}
         <table style="width: 100%; margin-top: 10px;">
+            {% if CGST|trim and CGST not in ['0', '0.0', '0.00'] %}
             <tr>
                 <td>CGST 9%</td>
                 <td class="text-end">₹{{ CGST }}</td>
             </tr>
+            {% endif %}
+            {% if SGST|trim and SGST not in ['0', '0.0', '0.00'] %}
             <tr>
                 <td>SGST 9%</td>
                 <td class="text-end">₹{{ SGST }}</td>
             </tr>
+            {% endif %}
+            {% if IGST|trim and IGST not in ['0', '0.0', '0.00'] %}
             <tr>
                 <td>IGST 18%</td>
                 <td class="text-end">₹{{ IGST }}</td>
             </tr>
+            {% endif %}
         </table>
+        {% endif %}
 
         <!-- Total -->
         <table style="width: 100%; margin-top: 10px;">
