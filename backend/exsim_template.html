@@ -31,6 +31,7 @@
         td {
             border: 1px solid black;
             border-collapse: collapse;
+            page-break-inside: avoid;
         }
 
         th,
@@ -204,14 +205,14 @@
             {% if ocean_freight_cgst|trim and ocean_freight_cgst != '0' %}
             <tr>
                 <td class="text-end" style="padding-right: 20px;">CGST 2.50%</td>
-                <td class="text-center">2.50 %</td>
+                <td class="text-center"></td>
                 <td class="text-end">{{ ocean_freight_cgst }}</td>
             </tr>
             {% endif %}
             {% if ocean_freight_sgst|trim and ocean_freight_sgst != '0' %}
             <tr>
                 <td class="text-end" style="padding-right: 20px;">SGST 2.50%</td>
-                <td class="text-center">2.50 %</td>
+                <td class="text-center"></td>
                 <td class="text-end">{{ ocean_freight_sgst }}</td>
             </tr>
             {% endif %}
@@ -226,14 +227,14 @@
             {% if carrier_local_cgst|trim and carrier_local_cgst != '0' %}
             <tr>
                 <td class="text-end" style="padding-right: 20px;">CGST @ 9%</td>
-                <td class="text-center">9 %</td>
+                <td class="text-center"></td>
                 <td class="text-end">{{ carrier_local_cgst }}</td>
             </tr>
             {% endif %}
             {% if carrier_local_sgst|trim and carrier_local_sgst != '0' %}
             <tr>
                 <td class="text-end" style="padding-right: 20px;">SGST @ 9%</td>
-                <td class="text-center">9 %</td>
+                <td class="text-center"></td>
                 <td class="text-end">{{ carrier_local_sgst }}</td>
             </tr>
             {% endif %}
@@ -248,14 +249,14 @@
             {% if wowtruck_handling_cgst|trim and wowtruck_handling_cgst != '0' %}
             <tr>
                 <td class="text-end" style="padding-right: 20px;">CGST @ 9%</td>
-                <td class="text-center">9 %</td>
+                <td class="text-center"></td>
                 <td class="text-end">{{ wowtruck_handling_cgst }}</td>
             </tr>
             {% endif %}
             {% if wowtruck_handling_sgst|trim and wowtruck_handling_sgst != '0' %}
             <tr>
                 <td class="text-end" style="padding-right: 20px;">SGST @ 9%</td>
-                <td class="text-center">9 %</td>
+                <td class="text-center"></td>
                 <td class="text-end">{{ wowtruck_handling_sgst }}</td>
             </tr>
             {% endif %}
