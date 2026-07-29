@@ -151,11 +151,14 @@
                     Mode: {{ terms_of_payment }}<br>
                     Voucher Ref: {{ Voucher_Ref_No }}<br>
                     Voucher No: {{ Voucher_no }}<br>
-                    Reference No. & Date: {{ Voucher_Type }}
+                    Reference No. & Date: {{ Reference_No_and_Date }}
                 </td>
                 <td>
-                    Other Reference: {{ Other_References }}<br>
+                    Other References: {{ Other_References }}<br>
+                    Dispatch Doc No: {{ dispatch_doc_no }}<br>
                     Dispatch Through: {{ dispatch_through }}<br>
+                    Bill of Lading/LR-RR No: {{ bill_of_lading }}<br>
+                    Motor Vehicle No: {{ motor_vehicle_no }}<br>
                     Destination: {{ Destination }}<br>
                     Vessel/Flight No: {{ vessel_flight_no }}<br>
                     Order Date: {{ Order_No_and_Date }}<br>
@@ -192,69 +195,71 @@
                 <th style="width: 25%;" class="text-end">Amount (₹)</th>
             </tr>
 
-            {% if Transport|trim and Transport != '0' %}
+            {% if ocean_freight_charges|trim and ocean_freight_charges != '0' %}
             <tr>
-                <td>{{ Particulars1 }} <small>{{ Trans_Form }}</small></td>
-                <td class="text-center">996511</td>
-                <td class="text-end">₹{{ Transport }}</td>
+                <td><strong>Ocean Freight Charges</strong></td>
+                <td class="text-center">996521</td>
+                <td class="text-end">{{ ocean_freight_charges }}</td>
+            </tr>
+            {% if ocean_freight_cgst|trim and ocean_freight_cgst != '0' %}
+            <tr>
+                <td class="text-end" style="padding-right: 20px;">CGST 2.50%</td>
+                <td class="text-center">2.50 %</td>
+                <td class="text-end">{{ ocean_freight_cgst }}</td>
             </tr>
             {% endif %}
-
-            {% if Loading_charges|trim and Loading_charges != '0' %}
+            {% if ocean_freight_sgst|trim and ocean_freight_sgst != '0' %}
             <tr>
-                <td>Loading Charges</td>
-                <td class="text-center">996511</td>
-                <td class="text-end">₹{{ Loading_charges }}</td>
+                <td class="text-end" style="padding-right: 20px;">SGST 2.50%</td>
+                <td class="text-center">2.50 %</td>
+                <td class="text-end">{{ ocean_freight_sgst }}</td>
             </tr>
             {% endif %}
-
-            {% if Unloading_charges|trim and Unloading_charges != '0' %}
-            <tr>
-                <td>Un-Loading Charges</td>
-                <td class="text-center">996511</td>
-                <td class="text-end">₹{{ Unloading_charges }}</td>
-            </tr>
             {% endif %}
 
-            {% if additional_cost|trim and additional_cost != '0' %}
+            {% if carrier_local_charges|trim and carrier_local_charges != '0' %}
             <tr>
-                <td>Additional Cost</td>
-                <td class="text-center">996511</td>
-                <td class="text-end">₹{{ additional_cost }}</td>
+                <td><strong>Carrier Local Charges</strong></td>
+                <td class="text-center">996751</td>
+                <td class="text-end">{{ carrier_local_charges }}</td>
+            </tr>
+            {% if carrier_local_cgst|trim and carrier_local_cgst != '0' %}
+            <tr>
+                <td class="text-end" style="padding-right: 20px;">CGST @ 9%</td>
+                <td class="text-center">9 %</td>
+                <td class="text-end">{{ carrier_local_cgst }}</td>
             </tr>
             {% endif %}
-
-            {% if Additional_Toll|trim and Additional_Toll != '0' %}
+            {% if carrier_local_sgst|trim and carrier_local_sgst != '0' %}
             <tr>
-                <td>Gatepass / Toll Charges</td>
-                <td class="text-center">996799</td>
-                <td class="text-end">₹{{ Additional_Toll }}</td>
+                <td class="text-end" style="padding-right: 20px;">SGST @ 9%</td>
+                <td class="text-center">9 %</td>
+                <td class="text-end">{{ carrier_local_sgst }}</td>
             </tr>
             {% endif %}
+            {% endif %}
 
-            {% if Detention|trim and Detention != '0' %}
+            {% if wowtruck_handling_charges|trim and wowtruck_handling_charges != '0' %}
             <tr>
-                <td>Detention</td>
-                <td class="text-center">996511</td>
-                <td class="text-end">₹{{ Detention }}</td>
+                <td><strong>Wowtruck Handling Charges 25 $ Per Container</strong></td>
+                <td class="text-center">996711</td>
+                <td class="text-end">{{ wowtruck_handling_charges }}</td>
+            </tr>
+            {% if wowtruck_handling_cgst|trim and wowtruck_handling_cgst != '0' %}
+            <tr>
+                <td class="text-end" style="padding-right: 20px;">CGST @ 9%</td>
+                <td class="text-center">9 %</td>
+                <td class="text-end">{{ wowtruck_handling_cgst }}</td>
             </tr>
             {% endif %}
-        </table>
-
-        <!-- Tax Section -->
-        <table style="width: 100%; margin-top: 10px;">
+            {% if wowtruck_handling_sgst|trim and wowtruck_handling_sgst != '0' %}
             <tr>
-                <td>CGST 9%</td>
-                <td class="text-end">₹{{ CGST }}</td>
+                <td class="text-end" style="padding-right: 20px;">SGST @ 9%</td>
+                <td class="text-center">9 %</td>
+                <td class="text-end">{{ wowtruck_handling_sgst }}</td>
             </tr>
-            <tr>
-                <td>SGST 9%</td>
-                <td class="text-end">₹{{ SGST }}</td>
-            </tr>
-            <tr>
-                <td>IGST 18%</td>
-                <td class="text-end">₹{{ IGST }}</td>
-            </tr>
+            {% endif %}
+            {% endif %}
         </table>
 
         <!-- Total -->

@@ -171,15 +171,7 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                 except:
                     row_data['Total_Amount_words'] = "Zero Only"
 
-                # Subtotal
-                try:
-                    transport = float(row_data.get('Transport', 0) or 0)
-                    loading = float(row_data.get('Loading Charges', 0) or 0)
-                    detention = float(row_data.get('Detention', 0) or 0)
-                    additional = float(row_data.get('Additional Cost', 0) or 0)
-                    row_data['sub_total'] = round(transport + loading + detention + additional, 2)
-                except:
-                    row_data['sub_total'] = 0
+
 
                 # Additional mappings
                 row_data.update({
@@ -191,11 +183,24 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                     'Total_Billing_to_DK': row_data.get('Total Billing to DK', ''),
                     'Voucher_no': row_data.get('Voucher_no', ''),
                     'Voucher_Type': row_data.get('Voucher Type', ''),
-                    'Other_Reference': row_data.get('Other_Reference', ''),
+                    'Other_References': row_data.get('Other References', row_data.get('Other Reference', '')),
+                    'Reference_No_and_Date': row_data.get('Reference No. & Date', row_data.get('Reference No & Date', row_data.get('Voucher Type', ''))),
                     'Order_No_and_Date': row_data.get('Order_No_&_Date', ''),
                     'Port_of_Loading': row_data.get('Port of Loading', ''),
                     'Port_of_Discharge': row_data.get('Port of Discharge', ''),
-                    'dispatch_through': row_data.get('Despatch Through', ''),
+                    'dispatch_doc_no': row_data.get('Dispatch Doc No.', row_data.get('Dispatch Doc No', '')),
+                    'dispatch_through': row_data.get('Dispatched through', row_data.get('Dispatch Through', row_data.get('Despatch Through', ''))),
+                    'bill_of_lading': row_data.get('Bill of Lading/LR-RR No.', row_data.get('Bill of Lading/LR-RR No', row_data.get('Bill of Lading', ''))),
+                    'motor_vehicle_no': row_data.get('Motor Vehicle No.', row_data.get('Motor Vehicle No', '')),
+                    'ocean_freight_charges': row_data.get('Ocean Freight Charges', row_data.get('Ocen Freight Charges', '')),
+                    'ocean_freight_cgst': row_data.get('CGST (Ocean Freight Charges) @ 2.50%', row_data.get('CGST (Ocen Freight Charges) @ 2.50%', '')),
+                    'ocean_freight_sgst': row_data.get('SGST (Ocean Freight Charges) @ 2.50%', row_data.get('SGST (Ocen Freight Charges) @ 2.50%', '')),
+                    'carrier_local_charges': row_data.get('Carrier Local Charges', ''),
+                    'carrier_local_cgst': row_data.get('CGST (Carrier Local Charges) @ 9%', ''),
+                    'carrier_local_sgst': row_data.get('SGST (Carrier Local Charges) @ 9%', ''),
+                    'wowtruck_handling_charges': row_data.get('Wowtruck Handling Charges 25 $ Per Container', ''),
+                    'wowtruck_handling_cgst': row_data.get('CGST (Wowtruck Handling Charges 25 $ Per Container) @ 9%', ''),
+                    'wowtruck_handling_sgst': row_data.get('SGST (Wowtruck Handling Charges 25 $ Per Container) @ 9%', ''),
                     'Detention': row_data.get('Detention', ''),
                     'Loading_charges': row_data.get('Loading Charges', ''),
                     'additional_cost': row_data.get('Additional Cost', ''),
@@ -212,8 +217,9 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                     'dsc_datetime': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 })
 
-                invoice_no = str(row_data.get('invoice_no', f"INV_{index}")).strip().replace('/', '-')
-                if not invoice_no: invoice_no = f"INV_{index}"
+                invoice_no = str(row_data.get('invoice_no', row_data.get('Invoice No', row_data.get('Invoice No.', f"INV_{index}")))).strip().replace('/', '-')
+                if not invoice_no or invoice_no.lower() == 'nan': invoice_no = f"INV_{index}"
+                row_data['invoice_no'] = invoice_no
                 
                 # 3. Generate HTML & PDF
                 html_content = template.render(**row_data)
