@@ -2,10 +2,13 @@ import { useEffect, useRef } from 'react';
 import { Loader2 } from 'lucide-react';
 
 export function ProgressTracker({ logs, status }) {
-  const bottomRef = useRef(null);
+  const scrollableRef = useRef(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Scroll only the inner console div, NOT the whole page
+    if (scrollableRef.current) {
+      scrollableRef.current.scrollTop = scrollableRef.current.scrollHeight;
+    }
   }, [logs]);
 
   return (
@@ -18,7 +21,7 @@ export function ProgressTracker({ logs, status }) {
         <span className="text-xs text-gray-500 uppercase tracking-wider">{status}</span>
       </div>
       
-      <div className="flex-1 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+      <div ref={scrollableRef} className="flex-1 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
         {logs.length === 0 ? (
           <p className="text-gray-600 italic">Awaiting instructions...</p>
         ) : (
@@ -36,7 +39,6 @@ export function ProgressTracker({ logs, status }) {
             );
           })
         )}
-        <div ref={bottomRef} />
       </div>
     </div>
   );
