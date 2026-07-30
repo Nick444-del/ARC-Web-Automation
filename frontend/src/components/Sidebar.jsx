@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Layers, FileText, ChevronLeft, ChevronRight, Moon, Sun } from 'lucide-react';
+import { Building2, Truck, Ship, PackageOpen, ChevronLeft, ChevronRight, Moon, Sun } from 'lucide-react';
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -29,12 +29,13 @@ export function Sidebar() {
       </div>
       
       <nav className="flex-1 p-4 space-y-2">
+        {/* ARC Invoices — Building icon: represents corporate/company billing */}
         <NavLink 
           to="/" 
           className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-black dark:bg-white text-white dark:text-black shadow-md' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white'}`}
           title="ARC Invoice Portal"
         >
-          <Layers size={24} className="shrink-0" />
+          <Building2 size={24} className="shrink-0" />
           {!collapsed && (
             <div className="flex flex-col overflow-hidden">
               <span className="font-medium whitespace-nowrap">ARC Invoices</span>
@@ -42,12 +43,13 @@ export function Sidebar() {
           )}
         </NavLink>
         
+        {/* V-Trans Invoices — Truck icon: represents transport/vehicle billing */}
         <NavLink 
           to="/vtrans" 
           className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-black dark:bg-white text-white dark:text-black shadow-md' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white'}`}
           title="V-Trans Invoice Portal"
         >
-          <FileText size={24} className="shrink-0" />
+          <Truck size={24} className="shrink-0" />
           {!collapsed && (
             <div className="flex flex-col overflow-hidden">
               <span className="font-medium whitespace-nowrap">V-Trans Invoices</span>
@@ -55,12 +57,13 @@ export function Sidebar() {
           )}
         </NavLink>
         
+        {/* HMC Invoices — Ship icon: represents heavy machinery/maritime */}
         <NavLink 
           to="/hmc" 
           className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-black dark:bg-white text-white dark:text-black shadow-md' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white'}`}
           title="HMC Invoice Portal"
         >
-          <Layers size={24} className="shrink-0" />
+          <Ship size={24} className="shrink-0" />
           {!collapsed && (
             <div className="flex flex-col overflow-hidden">
               <span className="font-medium whitespace-nowrap">HMC Invoices</span>
@@ -68,12 +71,13 @@ export function Sidebar() {
           )}
         </NavLink>
         
+        {/* EXSIM Invoices — PackageOpen icon: represents export/shipping containers */}
         <NavLink 
           to="/exsim" 
           className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-black dark:bg-white text-white dark:text-black shadow-md' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white'}`}
           title="EXSIM Invoice Portal"
         >
-          <Layers size={24} className="shrink-0" />
+          <PackageOpen size={24} className="shrink-0" />
           {!collapsed && (
             <div className="flex flex-col overflow-hidden">
               <span className="font-medium whitespace-nowrap">EXSIM Invoices</span>
