@@ -132,7 +132,9 @@
                     Mode: {{ terms_of_payment }}<br>
                     Voucher Ref: {{ Voucher_Ref_No }}<br>
                     Voucher No: {{ Voucher_no }}<br>
-                    Reference No. & Date: {{ Reference_No_and_Date }}
+                    Reference No. & Date: {{ Reference_No_and_Date }}<br>
+                    {% if container_no|trim %}Container No: {{ container_no }}<br>{% endif %}
+                    {% if container_type|trim %}Container Type: {{ container_type }}{% endif %}
                 </td>
                 <td>
                     Other References: {{ Other_References }}<br>
@@ -144,9 +146,7 @@
                     Vessel/Flight No: {{ vessel_flight_no }}<br>
                     Order Date: {{ Order_No_and_Date }}<br>
                     Port of Loading: {{ Port_of_Loading }}<br>
-                    Port of Discharge: {{ Port_of_Discharge }}<br>
-                    {% if container_no|trim %}Container No: {{ container_no }}<br>{% endif %}
-                    {% if container_type|trim %}Container Type: {{ container_type }}{% endif %}
+                    Port of Discharge: {{ Port_of_Discharge }}
                 </td>
             </tr>
         </table>
