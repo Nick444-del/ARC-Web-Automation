@@ -68,26 +68,6 @@
             margin: 10mm;
         }
 
-        /* Dynamic narration styles */
-        .narration-container {
-            padding: 8px;
-            min-height: 20px;
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid #ffffff;
-            border-radius: 4px;
-        }
-
-        .narration-line {
-            margin-bottom: 4px;
-            padding: 2px 4px;
-            border-left: 3px solid #4a90e2;
-            background-color: #f0f7ff;
-        }
-
-        .narration-line:last-child {
-            margin-bottom: 0;
-        }
     </style>
 </head>
 
@@ -166,25 +146,6 @@
                     Port of Loading: {{ Port_of_Loading }}<br>
                     Port of Discharge: {{ Port_of_Discharge }}
                 </td>
-            </tr>
-        </table>
-
-        <!-- Service Info -->
-        <table style="width: 100%; margin-top: 10px;">
-            <tr>
-                <th colspan="3">DESCRIPTION OF SERVICES</th>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <strong>Narration:</strong>
-                    <div class="narration-container" id="narration-container">
-                        <!-- Dynamic narration lines will be inserted here -->
-                        {{Narration}}
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">Approver: {{ Terms_of_Delivery }}</td>
             </tr>
         </table>
 
@@ -292,48 +253,6 @@
         </table>
     </div>
 
-    <script>
-        // Function to process narration text and create dynamic lines
-        function processNarration(narrationText) {
-            const container = document.getElementById('narration-container');
-
-            // Clear existing content
-            container.innerHTML = '';
-
-            if (!narrationText || narrationText.trim() === '') {
-                container.innerHTML = '<div class="narration-line">No narration provided</div>';
-                return;
-            }
-
-            // Split by new lines or other delimiters as needed
-            const lines = narrationText.split('\n').filter(line => line.trim() !== '');
-
-            if (lines.length === 0) {
-                container.innerHTML = '<div class="narration-line">No narration provided</div>';
-                return;
-            }
-
-            // Create a div for each line
-            lines.forEach(line => {
-                const lineDiv = document.createElement('div');
-                lineDiv.className = 'narration-line';
-                lineDiv.textContent = line.trim();
-                container.appendChild(lineDiv);
-            });
-        }
-
-        // Example usage with sample data
-        // In your actual implementation, you would get this from your template engine
-        document.addEventListener('DOMContentLoaded', function () {
-            // Sample narration data - replace with your actual data
-            const sampleNarration = `Transportation of goods from Mumbai to Delhi
-            Special handling required for fragile items
-            Delivery to be completed within 48 hours
-            Additional documentation required for customs clearance`;
-
-            processNarration(sampleNarration);
-        });
-    </script>
 </body>
 
 </html>
