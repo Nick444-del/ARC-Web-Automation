@@ -107,7 +107,7 @@
                     <b>DORF-KETAL CHEMICALS INDIA LIMITED</b><br>
                     Address: {{ plant_address }}<br>
                     GSTIN: {{ plant_gst }}<br>
-                    Customer ID: {{ plant_customer_id }}
+                    Customer ID: {{ plant_customer_id }} <br>
                     <span style="font-weight: normal;">LUT/Bond No. : AD270425001803D</span><br>
                     <span style="font-weight: normal;">From: 01-02-2025 To: 31-03-2026</span><br>
                 </td>
@@ -144,7 +144,9 @@
                     Vessel/Flight No: {{ vessel_flight_no }}<br>
                     Order Date: {{ Order_No_and_Date }}<br>
                     Port of Loading: {{ Port_of_Loading }}<br>
-                    Port of Discharge: {{ Port_of_Discharge }}
+                    Port of Discharge: {{ Port_of_Discharge }}<br>
+                    {% if container_no|trim %}Container No: {{ container_no }}<br>{% endif %}
+                    {% if container_type|trim %}Container Type: {{ container_type }}{% endif %}
                 </td>
             </tr>
         </table>
