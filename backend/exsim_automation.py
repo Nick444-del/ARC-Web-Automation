@@ -193,6 +193,7 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                     'bill_of_lading': row_data.get('Bill of Lading/LR-RR No.', row_data.get('Bill of Lading/LR-RR No', row_data.get('Bill of Lading', ''))),
                     'motor_vehicle_no': row_data.get('Motor Vehicle No.', row_data.get('Motor Vehicle No', '')),
                     'ocean_freight_charges': row_data.get('Ocean Freight Charges', row_data.get('Ocen Freight Charges', '')),
+                    'ocean_freight_desc': row_data.get('Ocean Freight Description', row_data.get('Ocean Freight Desc', row_data.get('Ocen Freight Description', ''))),
                     'ocean_freight_cgst': row_data.get('CGST (Ocean Freight Charges) @ 2.50%', row_data.get('CGST (Ocen Freight Charges) @ 2.50%', '')),
                     'ocean_freight_sgst': row_data.get('SGST (Ocean Freight Charges) @ 2.50%', row_data.get('SGST (Ocen Freight Charges) @ 2.50%', '')),
                     'carrier_local_charges': row_data.get('Carrier Local Charges', ''),

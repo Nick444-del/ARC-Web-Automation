@@ -77,9 +77,9 @@
         <table style="width: 100%; border-collapse: collapse;">
             <tr style="vertical-align: top;">
                 <!-- Logo -->
-                <td class="no-border" style="width: 30%;">
+                <td class="no-border" style="width: 25%;">
                     <img src="logo.jpg" alt="WOWTRUCK Logo"
-                        style="max-width: 100%; height: auto; display: block; margin: 5px;" />
+                        style="max-width: 120px; height: auto; display: block; margin: 5px;" />
                 </td>
 
                 <!-- Title -->
@@ -159,7 +159,12 @@
 
             {% if ocean_freight_charges|trim and ocean_freight_charges != '0' %}
             <tr>
-                <td><strong>Ocean Freight Charges</strong></td>
+                <td>
+                    <strong>Ocean Freight Charges</strong>
+                    {% if ocean_freight_desc|trim %}
+                    <br><span style="font-style: italic; font-size: 11px;">{{ ocean_freight_desc }}</span>
+                    {% endif %}
+                </td>
                 <td class="text-center">996521</td>
                 <td class="text-end">{{ ocean_freight_charges }}</td>
             </tr>
