@@ -163,14 +163,7 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
             try:
                 row_data = {k: safe_str(v) for k, v in row.to_dict().items()}
                 
-                # Amount in words
-                try:
-                    raw_amount = str(row_data.get('Total Amount', 0) or 0).replace(',', '').replace('₹', '').strip()
-                    amount = float(raw_amount) if raw_amount else 0
-                    row_data['Total_Amount_words'] = amount_to_words(amount)
-                except:
-                    row_data['Total_Amount_words'] = "Zero Only"
-
+                # Calculate amounts dynamically after updating mapping
 
 
                 # Additional mappings
@@ -179,7 +172,6 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                     'plant_address': row_data.get('plant_Address', ''),
                     'plant_gst': row_data.get('plant_GST No', ''),
                     'plant_customer_id': row_data.get('plant_Customer ID', ''),
-                    'Total_Amount': row_data.get('Total Amount', ''),
                     'Total_Billing_to_DK': row_data.get('Total Billing to DK', ''),
                     'Voucher_no': row_data.get('Voucher_no', ''),
                     'Voucher_Type': row_data.get('Voucher Type', ''),
@@ -221,6 +213,30 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                     'dsc_path': os.path.join(base_dir, 'DSC.png'),  # Included just in case
                     'dsc_datetime': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 })
+
+                # Dynamically calculate total amount from mapped charge fields
+                def parse_amt(val):
+                    try:
+                        v = str(val).replace(',', '').replace('₹', '').strip()
+                        return float(v) if v else 0.0
+                    except:
+                        return 0.0
+                
+                charge_keys = [
+                    'ocean_freight_charges', 'ocean_freight_cgst', 'ocean_freight_sgst', 'ocean_freight_igst',
+                    'carrier_local_charges', 'carrier_local_cgst', 'carrier_local_sgst', 'carrier_local_igst',
+                    'wowtruck_handling_charges', 'wowtruck_handling_cgst', 'wowtruck_handling_sgst', 'wowtruck_handling_igst'
+                ]
+                
+                calculated_total = sum(parse_amt(row_data.get(k, 0)) for k in charge_keys)
+                
+                # Format to integer if no decimals needed, else 2 decimal places
+                row_data['Total_Amount'] = f"{calculated_total:.2f}".rstrip('0').rstrip('.') if calculated_total % 1 != 0 else f"{int(calculated_total)}"
+                
+                try:
+                    row_data['Total_Amount_words'] = amount_to_words(calculated_total)
+                except:
+                    row_data['Total_Amount_words'] = "Zero Only"
 
                 invoice_no = str(row_data.get('invoice_no', row_data.get('Invoice No', row_data.get('Invoice No.', f"INV_{index}")))).strip().replace('/', '-')
                 if not invoice_no or invoice_no.lower() == 'nan': invoice_no = f"INV_{index}"
