@@ -180,6 +180,13 @@
                 <td class="text-end">{{ ocean_freight_sgst }}</td>
             </tr>
             {% endif %}
+            {% if ocean_freight_igst|trim and ocean_freight_igst != '0' %}
+            <tr>
+                <td class="text-end" style="padding-right: 20px;">IGST 5%</td>
+                <td class="text-center"></td>
+                <td class="text-end">{{ ocean_freight_igst }}</td>
+            </tr>
+            {% endif %}
             {% endif %}
 
             {% if carrier_local_charges|trim and carrier_local_charges != '0' %}
@@ -202,6 +209,13 @@
                 <td class="text-end">{{ carrier_local_sgst }}</td>
             </tr>
             {% endif %}
+            {% if carrier_local_igst|trim and carrier_local_igst != '0' %}
+            <tr>
+                <td class="text-end" style="padding-right: 20px;">IGST @ 18%</td>
+                <td class="text-center"></td>
+                <td class="text-end">{{ carrier_local_igst }}</td>
+            </tr>
+            {% endif %}
             {% endif %}
 
             {% if wowtruck_handling_charges|trim and wowtruck_handling_charges != '0' %}
@@ -222,6 +236,13 @@
                 <td class="text-end" style="padding-right: 20px;">SGST @ 9%</td>
                 <td class="text-center"></td>
                 <td class="text-end">{{ wowtruck_handling_sgst }}</td>
+            </tr>
+            {% endif %}
+            {% if wowtruck_handling_igst|trim and wowtruck_handling_igst != '0' %}
+            <tr>
+                <td class="text-end" style="padding-right: 20px;">IGST @ 18%</td>
+                <td class="text-center"></td>
+                <td class="text-end">{{ wowtruck_handling_igst }}</td>
             </tr>
             {% endif %}
             {% endif %}
