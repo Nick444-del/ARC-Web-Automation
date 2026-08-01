@@ -184,7 +184,7 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                     'Voucher_no': row_data.get('Voucher_no', ''),
                     'Voucher_Type': row_data.get('Voucher Type', ''),
                     'Other_References': row_data.get('Other_References', row_data.get('Other References', row_data.get('Other Reference', ''))),
-                    'Reference_No_and_Date': row_data.get('Reference No. & Date', row_data.get('Reference No & Date', row_data.get('Voucher Type', ''))),
+                    'Reference_No_and_Date': row_data.get('Reference Date', row_data.get('Reference No. & Date', row_data.get('Reference No & Date', row_data.get('Voucher Type', '')))),
                     'Port_of_Loading': row_data.get('Port of Loading', ''),
                     'Port_of_Discharge': row_data.get('Port of Discharge', ''),
                     'place_of_receipt': row_data.get('Place of Receipt by Shipper', row_data.get('Place of Receipt By Shipper', '')),
