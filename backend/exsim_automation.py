@@ -190,7 +190,7 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                     'place_of_receipt': row_data.get('Place of Receipt by Shipper', row_data.get('Place of Receipt By Shipper', '')),
                     'container_no': row_data.get('Container No.', row_data.get('Container No', row_data.get('container_no', ''))),
                     'container_type': row_data.get('Container Type', row_data.get('container_type', '')),
-                    'dispatch_doc_no': row_data.get('Dispatch Doc No.', row_data.get('Dispatch Doc No', '')),
+                    'dispatch_doc_no': row_data.get('Dispatch Doc No.', row_data.get('Dispatch Doc No', row_data.get('despatch_doc_no', ''))),
                     'dispatch_through': row_data.get('Dispatched through', row_data.get('Dispatch Through', row_data.get('Despatch Through', ''))),
                     'bill_of_lading': row_data.get('Bill of Lading/LR-RR No.', row_data.get('Bill of Lading/LR-RR No', row_data.get('Bill of Lading', ''))),
                     'ocean_freight_charges': row_data.get('Ocean Freight Charges', row_data.get('Ocen Freight Charges', '')),
