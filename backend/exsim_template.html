@@ -141,7 +141,8 @@
                     Destination: {{ Destination }}<br>
                     Vessel/Flight No: {{ vessel_flight_no }}<br>
                     Port of Loading: {{ Port_of_Loading }}<br>
-                    Port of Discharge: {{ Port_of_Discharge }}
+                    Port of Discharge: {{ Port_of_Discharge }}<br>
+                    {% if place_of_receipt|trim %}Place of Receipt by Shipper: {{ place_of_receipt }}{% endif %}
                 </td>
             </tr>
         </table>
