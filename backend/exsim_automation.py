@@ -230,15 +230,15 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                 HTML(string=html_content, base_url=base_dir).write_pdf(invoice_pdf_path)
                 generated_count += 1
                 
-                # 4. Merge PDF
-                voucher_raw = row_data.get('Voucher_no', '')
+                # 4. Merge PDF using Reference No. (Voucher_no column)
+                reference_no_raw = row_data.get('Voucher_no', '')
                 merged_successfully = False
                 
-                if voucher_raw:
-                    voucher_parts = str(voucher_raw).split("/")
-                    if len(voucher_parts) >= 3:
-                        voucher_key = " ".join(voucher_parts[:3]).upper()
-                        voucher_path = voucher_files.get(voucher_key)
+                if reference_no_raw:
+                    ref_parts = str(reference_no_raw).split("/")
+                    if len(ref_parts) >= 3:
+                        ref_key = " ".join(ref_parts[:3]).upper()
+                        voucher_path = voucher_files.get(ref_key)
                         
                         if voucher_path:
                             try:
@@ -251,15 +251,15 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                                 merger.close()
                                 merged_successfully = True
                                 merged_count += 1
-                                yield f"✅ Merged invoice {invoice_no} with voucher {voucher_key}"
+                                yield f"✅ Merged invoice {invoice_no} with reference {ref_key}"
                             except Exception as e:
                                 yield f"❌ Error merging row {index+1} ({invoice_no}): {e}"
                         else:
-                            yield f"⚠️ Voucher PDF not found for: {voucher_key} (Row {index+1})"
+                            yield f"⚠️ Voucher PDF not found for Reference No: {ref_key} (Row {index+1})"
                     else:
-                        yield f"⚠️ Unexpected voucher format '{voucher_raw}' at row {index+1}"
+                        yield f"⚠️ Unexpected Reference No. format '{reference_no_raw}' at row {index+1}"
                 else:
-                    yield f"⚠️ Missing Voucher_no at row {index+1}"
+                    yield f"⚠️ Missing Reference No. at row {index+1}"
                     
                 if include_unmerged and not merged_successfully:
                     shutil.copy2(invoice_pdf_path, os.path.join(unmerged_dir, f"{invoice_no}_unmerged.pdf"))
