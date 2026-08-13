@@ -254,29 +254,48 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                 merged_successfully = False
                 
                 if reference_no_raw:
-                    ref_parts = str(reference_no_raw).split("/")
-                    if len(ref_parts) >= 3:
-                        ref_key = " ".join(ref_parts[:3]).upper()
-                        voucher_path = voucher_files.get(ref_key)
-                        
-                        if voucher_path:
-                            try:
-                                merger = PdfMerger()
-                                merger.append(invoice_pdf_path)
-                                merger.append(voucher_path)
+                    # Support multiple files separated by comma (e.g. 'file1, file2')
+                    file_names = [f.strip().upper() for f in str(reference_no_raw).split(",")]
+                    
+                    found_paths = []
+                    missing_files = []
+                    
+                    for fn in file_names:
+                        if fn:
+                            # Try exact match
+                            path = voucher_files.get(fn)
+                            # Fallback if user accidentally included .pdf extension in the CSV
+                            if not path and fn.endswith('.PDF'):
+                                path = voucher_files.get(fn[:-4])
                                 
-                                merged_pdf_path = os.path.join(merged_pdfs_dir, f"{invoice_no}_merged.pdf")
-                                merger.write(merged_pdf_path)
-                                merger.close()
-                                merged_successfully = True
-                                merged_count += 1
-                                yield f"✅ Merged invoice {invoice_no} with reference {ref_key}"
-                            except Exception as e:
-                                yield f"❌ Error merging row {index+1} ({invoice_no}): {e}"
-                        else:
-                            yield f"⚠️ Voucher PDF not found for Reference No: {ref_key} (Row {index+1})"
+                            if path:
+                                found_paths.append((fn, path))
+                            else:
+                                missing_files.append(fn)
+                                
+                    if found_paths:
+                        try:
+                            merger = PdfMerger()
+                            merger.append(invoice_pdf_path)
+                            
+                            for fn, path in found_paths:
+                                merger.append(path)
+                                
+                            merged_pdf_path = os.path.join(merged_pdfs_dir, f"{invoice_no}_merged.pdf")
+                            merger.write(merged_pdf_path)
+                            merger.close()
+                            merged_successfully = True
+                            merged_count += 1
+                            
+                            found_names = ", ".join([f[0] for f in found_paths])
+                            msg = f"✅ Merged invoice {invoice_no} with: {found_names}"
+                            if missing_files:
+                                msg += f" (⚠️ Missing: {', '.join(missing_files)})"
+                            yield msg
+                        except Exception as e:
+                            yield f"❌ Error merging row {index+1} ({invoice_no}): {e}"
                     else:
-                        yield f"⚠️ Unexpected Reference No. format '{reference_no_raw}' at row {index+1}"
+                        yield f"⚠️ No voucher PDFs found for: {reference_no_raw} (Row {index+1})"
                 else:
                     yield f"⚠️ Missing Reference No. at row {index+1}"
                     
