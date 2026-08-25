@@ -145,6 +145,7 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                 data["Sell_Rate"] = data.get("Sell Rate")
 
                 # Charges
+                data["Bifurcation"] = safe_str(data.get("Bifurcation"))
                 data["Freight"] = format_charge(data.get("Freight"))
                 data["LR"] = format_charge(data.get("LR"))
                 data["DD"] = format_charge(data.get("DD"))
