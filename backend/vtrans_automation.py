@@ -141,8 +141,14 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                 data["Product_code"] = data.get("Product Code")
                 data["pickup"] = data.get("Pick up")
                 data["Drop"] = data.get("Drop")
-                data["Actual_Wt"] = data.get("Actual Wt")
-                data["Sell_Rate"] = data.get("Sell Rate")
+                data["Actual_Wt"] = safe_str(
+                    next((v for k, v in data.items() if k.lower().replace(" ", "") == "actualwt"), None)
+                    or data.get("Actual Wt") or data.get("Actual_Wt")
+                )
+                data["Sell_Rate"] = safe_str(
+                    next((v for k, v in data.items() if k.lower().replace(" ", "") == "sellrate"), None)
+                    or data.get("Sell Rate") or data.get("Sell_Rate")
+                )
 
                 # Charges
                 data["Bifurcation"] = safe_str(data.get("Bifurcation"))
