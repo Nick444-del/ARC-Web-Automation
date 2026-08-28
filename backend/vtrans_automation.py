@@ -147,6 +147,8 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
         os.makedirs(invoices_dir, exist_ok=True)
         os.makedirs(merged_pdfs_dir, exist_ok=True)
 
+        generated_invoices = {}
+
         # Process each row
         for index, row in merged_df.iterrows():
             try:
@@ -196,13 +198,20 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                 # Check custom Invoice No overriding from user specification
                 custom_invoice_no = data.get("Invoice No.1") or data.get("Invoice No.2") or data.get("Invoice No")
                 if custom_invoice_no and str(custom_invoice_no).lower() != "nan" and str(custom_invoice_no).strip() != "":
-                    invoice_no = str(custom_invoice_no).strip()
+                    base_invoice_no = str(custom_invoice_no).strip()
                 else:
                     series_number = 70001 + index
-                    invoice_no = f"WT{month}{year}{series_number}"
+                    base_invoice_no = f"WT{month}{year}{series_number}"
                     
                 for ch in ['\\', '/', ':', '*', '?', '"', '<', '>', '|']:
-                    invoice_no = invoice_no.replace(ch, "_")
+                    base_invoice_no = base_invoice_no.replace(ch, "_")
+
+                if base_invoice_no in generated_invoices:
+                    generated_invoices[base_invoice_no] += 1
+                    invoice_no = f"{base_invoice_no}_{generated_invoices[base_invoice_no]}"
+                else:
+                    generated_invoices[base_invoice_no] = 1
+                    invoice_no = base_invoice_no
 
                 data["Invoice_Dt"] = current_date.strftime("%d-%m-%Y")
                 data["invoice_no"] = invoice_no
