@@ -86,6 +86,24 @@ def amount_to_words(amount):
 # ============================================================
 # AUTOMATION GENERATOR
 # ============================================================
+def flexible_get(data, *keys):
+    for key in keys:
+        if key in data and data[key]: return data[key]
+    
+    # normalize keys
+    norm = {str(k).lower().replace(" ", "").replace("_", ""): v for k, v in data.items()}
+    for key in keys:
+        norm_key = str(key).lower().replace(" ", "").replace("_", "")
+        if norm_key in norm and norm[norm_key]: return norm[norm_key]
+        
+    # fallback for substring matches if still not found
+    for key in keys:
+        for k, v in data.items():
+            if str(key).lower().replace(" ", "").replace("_", "") in str(k).lower().replace(" ", "").replace("_", ""):
+                if v: return v
+                
+    return ""
+
 def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, base_dir, session_id, include_unmerged=False, invoice_date=None):
     """
     Yields progress strings. 
@@ -135,35 +153,29 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                 data = {str(k): safe_str(v) for k, v in row.to_dict().items()}
                 
                 # Mapping based on generate_weasy.py logic
-                data["consignee_name"] = data.get("Cnee Name")
-                data["pickup_address"] = data.get("Address")
-                data["Dorf_no"] = data.get("Dorf No") or data.get("Invoice No")
-                data["Product_code"] = data.get("Product Code")
-                data["pickup"] = data.get("Pick up")
-                data["Drop"] = data.get("Drop")
-                data["Actual_Wt"] = safe_str(
-                    next((v for k, v in data.items() if k.lower().replace(" ", "") == "actualwt"), None)
-                    or data.get("Actual Wt") or data.get("Actual_Wt")
-                )
-                data["Sell_Rate"] = safe_str(
-                    next((v for k, v in data.items() if k.lower().replace(" ", "") == "sellrate"), None)
-                    or data.get("Sell Rate") or data.get("Sell_Rate")
-                )
+                data["consignee_name"] = flexible_get(data, "Cnee Name", "consignee name")
+                data["pickup_address"] = flexible_get(data, "Address")
+                data["Dorf_no"] = flexible_get(data, "Dorf No", "Invoice No")
+                data["Product_code"] = flexible_get(data, "Product Code")
+                data["pickup"] = flexible_get(data, "Pick up", "Pickup")
+                data["Drop"] = flexible_get(data, "Drop")
+                data["Actual_Wt"] = flexible_get(data, "Actual Wt", "Actual_Wt", "ActualWt")
+                data["Sell_Rate"] = flexible_get(data, "Sell Rate", "Sell_Rate", "SellRate")
 
                 # Charges
-                data["Bifurcation"] = safe_str(data.get("Bifurcation"))
-                data["Freight"] = format_charge(data.get("Freight"))
-                data["LR"] = format_charge(data.get("LR"))
-                data["DD"] = format_charge(data.get("DD"))
-                data["GC"] = format_charge(data.get("GC"))
-                data["Taxable_Amt"] = format_charge(data.get("Taxable Amt"))
+                data["Bifurcation"] = flexible_get(data, "Bifurcation")
+                data["Freight"] = format_charge(flexible_get(data, "Freight"))
+                data["LR"] = format_charge(flexible_get(data, "LR"))
+                data["DD"] = format_charge(flexible_get(data, "DD"))
+                data["GC"] = format_charge(flexible_get(data, "GC"))
+                data["Taxable_Amt"] = format_charge(flexible_get(data, "Taxable Amt"))
 
-                data["AOC"] = format_charge(data.get("AOC") or data.get(" AOC "))
-                data["special_delivery_charge"] = format_charge(data.get("special delivery charge") or data.get(" special delivery charge "))
-                data["ODA"] = format_charge(data.get("ODA") or data.get(" ODA "))
-                data["local_charges"] = format_charge(next((v for k, v in data.items() if "local" in str(k).lower() and "charge" in str(k).lower()), None) or data.get("local charge") or data.get("Local Charges"))
-                data["unloading"] = format_charge(next((v for k, v in data.items() if "unload" in str(k).lower()), None))
-                data["toll_charge"] = format_charge(data.get("Toll charges") or data.get(" Toll charges ") or data.get("Toll Charge") or data.get(" Toll Charge "))
+                data["AOC"] = format_charge(flexible_get(data, "AOC"))
+                data["special_delivery_charge"] = format_charge(flexible_get(data, "special delivery charge"))
+                data["ODA"] = format_charge(flexible_get(data, "ODA"))
+                data["local_charges"] = format_charge(flexible_get(data, "local charge", "Local Charges", "local charges"))
+                data["unloading"] = format_charge(flexible_get(data, "unloading", "Unloading at client location", "unload"))
+                data["toll_charge"] = format_charge(flexible_get(data, "Toll charges", "Toll Charge", "toll charge"))
 
                 # Plant info
                 data["plant_address"] = data.get("plant_Address")
