@@ -98,8 +98,14 @@ def flexible_get(data, *keys):
         
     # fallback for substring matches if still not found
     for key in keys:
+        norm_target = str(key).lower().replace(" ", "").replace("_", "")
         for k, v in data.items():
-            if str(key).lower().replace(" ", "").replace("_", "") in str(k).lower().replace(" ", "").replace("_", ""):
+            norm_k = str(k).lower().replace(" ", "").replace("_", "")
+            if norm_target in norm_k:
+                # Prevent short acronyms from incorrectly matching inside longer words
+                # e.g., "lr" inside "sellrate" or "dd" inside "address"
+                if len(norm_target) <= 3 and not norm_k.startswith(norm_target):
+                    continue
                 if v: return v
                 
     return ""
