@@ -256,15 +256,22 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                         yield f"⚠️ Skipped: No Merge Doc specified for {invoice_no}"
                     continue
                 
+                # Split by comma or pipe only — never split by whitespace to avoid
+                # breaking filenames that contain spaces (e.g. "Invoice 123.pdf")
                 if "," in merge_docs:
                     files = merge_docs.split(",")
                 elif "|" in merge_docs:
                     files = merge_docs.split("|")
                 else:
-                    files = merge_docs.split()
+                    files = [merge_docs]  # treat the whole value as one filename
 
                 files = [f.strip() for f in files if f.strip()]
                 
+                # Build a case-insensitive index of voucher files for fast lookup
+                voucher_index = {}
+                for f in os.listdir(vouchers_dir):
+                    voucher_index[f.lower()] = f
+
                 merger = PdfMerger()
                 merger.append(invoice_path)
                 
@@ -273,20 +280,25 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                     if file_name.lower() == "nan": continue
                     
                     file_pdf = file_name if file_name.lower().endswith(".pdf") else file_name + ".pdf"
-                    exact_path = os.path.join(vouchers_dir, file_pdf)
-                    
-                    if os.path.exists(exact_path):
-                        merger.append(exact_path)
+
+                    # 1. Case-insensitive exact match
+                    exact_voucher = voucher_index.get(file_pdf.lower())
+                    if exact_voucher:
+                        merger.append(os.path.join(vouchers_dir, exact_voucher))
                         added_any = True
                         continue
-                        
-                    # Partial match
+
+                    # 2. Case-insensitive partial match — the voucher filename must
+                    #    START WITH the search term to avoid short IDs (e.g. "12")
+                    #    accidentally matching longer names (e.g. "INV-1234.pdf")
+                    search_lower = file_name.lower()
                     matched = None
-                    for f in os.listdir(vouchers_dir):
-                        if file_name in f:
-                            matched = f
+                    for lower_name, real_name in voucher_index.items():
+                        name_no_ext = os.path.splitext(lower_name)[0]
+                        if name_no_ext.startswith(search_lower):
+                            matched = real_name
                             break
-                            
+
                     if matched:
                         merger.append(os.path.join(vouchers_dir, matched))
                         added_any = True

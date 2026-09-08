@@ -197,33 +197,47 @@ def process_automation(master_csv_path, plant_csv_path, vouchers_dir, base_dir, 
                 
                 yield f"✅ Generated invoice: {invoice_name}"
 
-                # Merge PDF logic
-                invoice_no_upper = str(invoice_name).strip().upper()
-                cn_no = str(data.get('CnNo', '')).strip().upper()
-                bill_no = str(data.get('Bill_no', '')).strip().upper()
-                
-                voucher_path = None
-                if cn_no and cn_no != 'NAN':
-                    voucher_path = voucher_files.get(cn_no)
-                if not voucher_path and bill_no and bill_no != 'NAN':
-                    voucher_path = voucher_files.get(bill_no)
+                # Merge PDF logic — supports comma-separated CnNo and Bill_no values
+                # e.g. CnNo = "123, 456" will merge both 123.pdf and 456.pdf
+                def parse_ids(val):
+                    """Split a comma-separated string of IDs, filter blanks and NANs."""
+                    return [
+                        p.strip().upper()
+                        for p in str(val).split(",")
+                        if p.strip() and p.strip().upper() != "NAN"
+                    ]
 
-                if voucher_path:
+                cn_ids   = parse_ids(data.get('CnNo', ''))   if data.get('CnNo', '')   else []
+                bill_ids = parse_ids(data.get('Bill_no', '')) if data.get('Bill_no', '') else []
+
+                # Collect all unique voucher paths to merge (CnNo takes priority)
+                voucher_paths = []
+                seen_ids = set()
+                for vid in cn_ids + bill_ids:
+                    if vid not in seen_ids:
+                        path = voucher_files.get(vid)
+                        if path:
+                            voucher_paths.append(path)
+                        seen_ids.add(vid)
+
+                if voucher_paths:
                     merger = PdfMerger()
                     merger.append(invoice_path)
-                    merger.append(voucher_path)
+                    for vpath in voucher_paths:
+                        merger.append(vpath)
                     
                     output_name = f"{invoice_name}.pdf"
                     output_path = os.path.join(merged_pdfs_dir, output_name)
                     merger.write(output_path)
                     merger.close()
-                    yield f"✅ Merged with voucher: {os.path.basename(voucher_path)}"
+                    merged_names = ", ".join(os.path.basename(p) for p in voucher_paths)
+                    yield f"✅ Merged with voucher(s): {merged_names}"
                 else:
                     if include_unmerged:
                         yield f"⚠️ No voucher found for {invoice_name}. Including unmerged invoice."
                         shutil.copy(invoice_path, os.path.join(merged_pdfs_dir, f"{invoice_name}.pdf"))
                     else:
-                        yield f"⚠️ Skipped: No voucher found for {invoice_name} (CnNo: {cn_no}, Bill No: {bill_no})"
+                        yield f"⚠️ Skipped: No voucher found for {invoice_name} (CnNo: {', '.join(cn_ids) or 'N/A'}, Bill No: {', '.join(bill_ids) or 'N/A'})"
 
             except Exception as e:
                 yield f"❌ Error on row {index + 1}: {e}"
