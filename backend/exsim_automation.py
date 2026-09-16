@@ -210,6 +210,8 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                     'Unloading_charges': next((v for k, v in row_data.items() if 'unload' in str(k).lower()), ''),
                     'Additional_Toll': row_data.get('Additional Toll', ''),
                     'Addiotional_Cost_Info': row_data.get('Addiotional Cost Info', ''),
+                    'wowtruck_service_fee': row_data.get('Wowtruck Service Fee', ''),
+                    'rounding_off': row_data.get('Rounding Off', ''),
                     'dsc_path': os.path.join(base_dir, 'DSC.png'),  # Included just in case
                     'dsc_datetime': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 })
@@ -225,7 +227,8 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                 charge_keys = [
                     'ocean_freight_charges', 'ocean_freight_cgst', 'ocean_freight_sgst', 'ocean_freight_igst',
                     'carrier_local_charges', 'carrier_local_cgst', 'carrier_local_sgst', 'carrier_local_igst',
-                    'wowtruck_handling_charges', 'wowtruck_handling_cgst', 'wowtruck_handling_sgst', 'wowtruck_handling_igst'
+                    'wowtruck_handling_charges', 'wowtruck_handling_cgst', 'wowtruck_handling_sgst', 'wowtruck_handling_igst',
+                    'wowtruck_service_fee', 'rounding_off'
                 ]
                 
                 calculated_total = sum(parse_amt(row_data.get(k, 0)) for k in charge_keys)

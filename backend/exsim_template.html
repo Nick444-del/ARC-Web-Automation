@@ -246,6 +246,22 @@
             </tr>
             {% endif %}
             {% endif %}
+
+            {% if wowtruck_service_fee|trim and wowtruck_service_fee != '0' %}
+            <tr>
+                <td><strong>Wowtruck Service Charges</strong></td>
+                <td class="text-center">996711</td>
+                <td class="text-end">{{ wowtruck_service_fee }}</td>
+            </tr>
+            {% endif %}
+
+            {% if rounding_off|trim and rounding_off != '0' %}
+            <tr>
+                <td>Rounding Off</td>
+                <td class="text-center"></td>
+                <td class="text-end">{{ rounding_off }}</td>
+            </tr>
+            {% endif %}
         </table>
 
         <!-- Total -->
