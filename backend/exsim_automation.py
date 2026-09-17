@@ -210,7 +210,7 @@ def process_exsim_automation(master_csv_path, plant_csv_path, vouchers_dir, base
                     'Unloading_charges': next((v for k, v in row_data.items() if 'unload' in str(k).lower()), ''),
                     'Additional_Toll': row_data.get('Additional Toll', ''),
                     'Addiotional_Cost_Info': row_data.get('Addiotional Cost Info', ''),
-                    'wowtruck_service_fee': row_data.get('Wowtruck Service Fee', ''),
+                    'wowtruck_service_fee': row_data.get('Wowtruck Service Fee 100 $ Per Container', row_data.get('Wowtruck Service Fee 100 Per Container', '')),
                     'rounding_off': row_data.get('Rounding Off', ''),
                     'dsc_path': os.path.join(base_dir, 'DSC.png'),  # Included just in case
                     'dsc_datetime': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
