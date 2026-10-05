@@ -46,6 +46,25 @@ def read_csv_safe(path):
             continue
     raise Exception("Unable to read CSV")
 
+def normalize_id(val):
+    """
+    Converts Excel number-formatted values back to clean integer strings.
+    Handles two cases that Excel causes when a column is formatted as Number:
+      1. Scientific notation:  '2.4261E+11' → '242610000000'
+      2. Float integers:       '181486.0'   → '181486'
+    If the value is not numeric (e.g. 'DOM25122306'), it is returned as-is.
+    """
+    v = str(val).strip()
+    if not v or v.lower() in ("nan", "none", ""):
+        return v
+    try:
+        f = float(v)
+        if f == int(f):
+            return str(int(f))
+    except (ValueError, OverflowError):
+        pass
+    return v
+
 def amount_to_words(amount):
     try:
         amount = float(amount)
@@ -133,7 +152,13 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
         if "Particlar1" in plant_df.columns:
             plant_df.rename(columns={"Particlar1": "Particulars1"}, inplace=True)
 
-        data_df["PLANT"] = data_df["PLANT"].astype(str).str.split(".").str[0].str.strip()
+        # Normalize PLANT column — handles Excel number formatting (181486.0 or 1.81486E+05 → 181486)
+        raw_plants = data_df["PLANT"].tolist()
+        data_df["PLANT"] = data_df["PLANT"].apply(normalize_id)
+        sci_notation_plants = [r for r in raw_plants if r and ('e' in str(r).lower() or (str(r).endswith('.0') and '.' in str(r)))]
+        if sci_notation_plants:
+            yield f"⚠️ Warning: {len(sci_notation_plants)} PLANT value(s) were in number/scientific notation format — auto-corrected. Format the PLANT column as Text in Excel to avoid this."
+
         plant_df["Customer ID"] = plant_df["Customer ID"].astype(str).str.strip()
         plant_df = plant_df.add_prefix("plant_")
 
@@ -155,6 +180,13 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
 
         generated_invoices = {}
 
+        # Build a case-insensitive index of voucher files ONCE (outside the row loop)
+        # Only index actual PDF files to avoid false hits from temp/system files.
+        voucher_index = {}
+        for f in os.listdir(vouchers_dir):
+            if f.lower().endswith(".pdf"):
+                voucher_index[f.lower()] = f
+
         # Process each row
         for index, row in merged_df.iterrows():
             try:
@@ -171,12 +203,14 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                 data["Sell_Rate"] = flexible_get(data, "Sell Rate", "Sell_Rate", "SellRate")
 
                 # Charges
-                data["Bifurcation"] = flexible_get(data, "Bifurcation")
-                data["Freight"] = format_charge(flexible_get(data, "Freight"))
-                data["LR"] = format_charge(flexible_get(data, "LR"))
-                data["DD"] = format_charge(flexible_get(data, "DD"))
-                data["GC"] = format_charge(flexible_get(data, "GC"))
-                data["Taxable_Amt"] = format_charge(flexible_get(data, "Taxable Amt"))
+                # NOTE: The CSV has two columns named "LR". Pandas renames the second to "LR.1".
+                # We try both so neither value is lost.
+                data["Bifurcation"] = flexible_get(data, "Bifurcation", " Bifurcation ")
+                data["Freight"] = format_charge(flexible_get(data, "Freight", " Freight "))
+                data["LR"] = format_charge(flexible_get(data, "LR", "LR.1"))
+                data["DD"] = format_charge(flexible_get(data, "DD", " DD "))
+                data["GC"] = format_charge(flexible_get(data, "GC", " GC "))
+                data["Taxable_Amt"] = format_charge(flexible_get(data, "Taxable Amt", "Taxable_Amt"))
 
                 data["AOC"] = format_charge(flexible_get(data, "AOC"))
                 data["special_delivery_charge"] = format_charge(flexible_get(data, "special delivery charge"))
@@ -246,78 +280,87 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                 yield f"✅ Generated invoice: {invoice_no}"
 
                 # Merge PDF logic
-                merge_docs = str(data.get("Merge Doc", "")).strip()
-                
-                if not merge_docs or merge_docs.lower() == "nan":
+                raw_merge_docs = str(data.get("Merge Doc", "")).strip()
+
+                if not raw_merge_docs or raw_merge_docs.lower() == "nan":
                     if include_unmerged:
                         yield f"⚠️ No merge docs specified for {invoice_no}. Including unmerged invoice."
                         shutil.copy(invoice_path, os.path.join(merged_pdfs_dir, f"{invoice_no}.pdf"))
                     else:
                         yield f"⚠️ Skipped: No Merge Doc specified for {invoice_no}"
                     continue
-                
+
                 # Split by comma or pipe only — never split by whitespace to avoid
                 # breaking filenames that contain spaces (e.g. "Invoice 123.pdf")
-                if "," in merge_docs:
-                    files = merge_docs.split(",")
-                elif "|" in merge_docs:
-                    files = merge_docs.split("|")
+                if "," in raw_merge_docs:
+                    raw_files = raw_merge_docs.split(",")
+                elif "|" in raw_merge_docs:
+                    raw_files = raw_merge_docs.split("|")
                 else:
-                    files = [merge_docs]  # treat the whole value as one filename
+                    raw_files = [raw_merge_docs]
 
-                files = [f.strip() for f in files if f.strip()]
-                
-                # Build a case-insensitive index of voucher files for fast lookup
-                voucher_index = {}
-                for f in os.listdir(vouchers_dir):
-                    voucher_index[f.lower()] = f
+                # Normalize each filename — converts Excel scientific notation
+                # e.g. "2.4261E+07" → "24261000", "25122306.0" → "25122306"
+                files = []
+                for rf in raw_files:
+                    rf = rf.strip()
+                    if not rf:
+                        continue
+                    normalized = normalize_id(rf)
+                    if normalized != rf:
+                        yield f"⚠️ Merge Doc value '{rf}' was in number format — auto-corrected to '{normalized}'. Format the Merge Doc column as Text in Excel to avoid this."
+                    files.append(normalized)
 
                 merger = PdfMerger()
                 merger.append(invoice_path)
-                
+
                 added_any = False
-                for file_name in files:
-                    if file_name.lower() == "nan": continue
-                    
-                    file_pdf = file_name if file_name.lower().endswith(".pdf") else file_name + ".pdf"
+                added_count = 0
+                try:
+                    for file_name in files:
+                        if file_name.lower() == "nan": continue
 
-                    # 1. Case-insensitive exact match
-                    exact_voucher = voucher_index.get(file_pdf.lower())
-                    if exact_voucher:
-                        merger.append(os.path.join(vouchers_dir, exact_voucher))
-                        added_any = True
-                        continue
+                        file_pdf = file_name if file_name.lower().endswith(".pdf") else file_name + ".pdf"
 
-                    # 2. Case-insensitive partial match — the voucher filename must
-                    #    START WITH the search term to avoid short IDs (e.g. "12")
-                    #    accidentally matching longer names (e.g. "INV-1234.pdf")
-                    search_lower = file_name.lower()
-                    matched = None
-                    for lower_name, real_name in voucher_index.items():
-                        name_no_ext = os.path.splitext(lower_name)[0]
-                        if name_no_ext.startswith(search_lower):
-                            matched = real_name
-                            break
+                        # 1. Case-insensitive exact match
+                        exact_voucher = voucher_index.get(file_pdf.lower())
+                        if exact_voucher:
+                            merger.append(os.path.join(vouchers_dir, exact_voucher))
+                            added_any = True
+                            added_count += 1
+                            continue
 
-                    if matched:
-                        merger.append(os.path.join(vouchers_dir, matched))
-                        added_any = True
+                        # 2. Case-insensitive partial match — the voucher filename must
+                        #    START WITH the search term to avoid short IDs (e.g. "12")
+                        #    accidentally matching longer names (e.g. "INV-1234.pdf")
+                        search_lower = file_name.lower()
+                        matched = None
+                        for lower_name, real_name in voucher_index.items():
+                            name_no_ext = os.path.splitext(lower_name)[0]
+                            if name_no_ext.startswith(search_lower):
+                                matched = real_name
+                                break
+
+                        if matched:
+                            merger.append(os.path.join(vouchers_dir, matched))
+                            added_any = True
+                            added_count += 1
+                        else:
+                            yield f"⚠️ Could not find voucher file: {file_name}"
+
+                    if added_any:
+                        output_name = f"{invoice_no}.pdf"
+                        output_path = os.path.join(merged_pdfs_dir, output_name)
+                        merger.write(output_path)
+                        yield f"✅ Merged {invoice_no} with {added_count}/{len(files)} voucher(s)"
                     else:
-                        yield f"⚠️ Could not find voucher file: {file_name}"
-                        
-                if added_any:
-                    output_name = f"{invoice_no}.pdf"
-                    output_path = os.path.join(merged_pdfs_dir, output_name)
-                    merger.write(output_path)
+                        if include_unmerged:
+                            yield f"⚠️ Vouchers not found for {invoice_no}. Including unmerged invoice."
+                            shutil.copy(invoice_path, os.path.join(merged_pdfs_dir, f"{invoice_no}.pdf"))
+                        else:
+                            yield f"⚠️ Skipped: Vouchers not found for {invoice_no}"
+                finally:
                     merger.close()
-                    yield f"✅ Merged {invoice_no} with {len(files)} vouchers"
-                else:
-                    merger.close()
-                    if include_unmerged:
-                        yield f"⚠️ Vouchers not found for {invoice_no}. Including unmerged invoice."
-                        shutil.copy(invoice_path, os.path.join(merged_pdfs_dir, f"{invoice_no}.pdf"))
-                    else:
-                        yield f"⚠️ Skipped: Vouchers not found for {invoice_no}"
 
             except Exception as e:
                 yield f"❌ Error on row {index + 1}: {e}"

@@ -1,24 +1,3 @@
-﻿Bill No ,Bill Dt ,Invoice No,Product Code,Pick up,Drop,Invoice Dt,Invoice Value,PLANT,CnNo,Cn Booking Date,Basis,Cn Dest Code,Address,Cnor Name,Cnee Name,Goods Desc,No Of Pkgs,Actual Wt,Charge Wt,Dly Type,Tot Gross Frt,Buy Rate,Buy Amt,Remark,Sell Rate, Bifurcation , Freight , DD , LR , GC , special delivery charge , Unloading at client location , Toll charges , local charge , AOC , ODA , LR , Taxable Amt , gst 18% , Sales value ,Invoice No,Merge Doc
-2.43E+11,09.04.26,DOM/25122306,SR-1753,VAPI AREA,Kanpur,,,181486,,,,,,DORF-KETAL CHEMICALS INDIA LIMITED,,,,5,50,,,,,,6.9,5*7,344.96,  -   ,,100,  -   ,150,"1,500",  -   ,,510,,"2,604.96",468.89,"3,073.90",,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Bill No ,Bill Dt ,Invoice No,Product Code,Pick up,Drop,Invoice Dt,Invoice Value,PLANT,CnNo,Cn Booking Date,Basis,Cn Dest Code,Address,Cnor Name,Cnee Name,Goods Desc,No Of Pkgs,Actual Wt,Charge Wt,Dly Type,Tot Gross Frt,Buy Rate,Buy Amt,Remark,Sell Rate,Bifurcation,Freight,DD,LR,GC,special delivery charge,Unloading at client location,Toll charges,local charge,AOC,ODA,LR.1,Taxable Amt,gst 18%,Sales value,Invoice No,Merge Doc
+242610000001,09.04.26,DOM/25122306,SR-1753,VAPI AREA,Kanpur,,,181486,,,,,,DORF-KETAL CHEMICALS INDIA LIMITED,,,,5,50,,,,,,6.9,5*7,344.96,  -   ,,100,  -   ,150,"1,500",  -   ,,510,,,"2,604.96",468.89,"3,073.90",,DOM25122306
+242610000002,09.04.26,DOM/25122283,SR 8232,VAPI AREA,Malda,,,181486,,,,,,DORF-KETAL CHEMICALS INDIA LIMITED,,,,832,832,,,,,,12.05,"10,028.93","2,000",,100,  -   ,  -   ,  -   ,"1,500",,  -   ,,,"13,628.93","2,453.21","16,082.10",,DOM25122283
