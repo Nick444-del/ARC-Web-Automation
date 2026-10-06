@@ -195,7 +195,7 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                 # Mapping based on generate_weasy.py logic
                 data["consignee_name"] = flexible_get(data, "Cnee Name", "consignee name")
                 data["pickup_address"] = flexible_get(data, "Address")
-                data["Dorf_no"] = flexible_get(data, "Dorf No", "Invoice No")
+                data["Dorf_no"] = flexible_get(data, "Dorf Invoice No", "Dorf No", "Invoice No")
                 data["Product_code"] = flexible_get(data, "Product Code")
                 data["pickup"] = flexible_get(data, "Pick up", "Pickup")
                 data["Drop"] = flexible_get(data, "Drop")
@@ -235,8 +235,15 @@ def process_vtrans_automation(master_csv_path, plant_csv_path, vouchers_dir, bas
                 month = current_date.strftime("%m")
                 year = current_date.strftime("%y")
                 
-                # Check custom Invoice No overriding from user specification
-                custom_invoice_no = data.get("Invoice No.1") or data.get("Invoice No.2") or data.get("Invoice No")
+                # Generated invoice number — from column AP ("Our Invoice No").
+                # Falls back to old column names for backward compatibility with existing CSVs.
+                # Note: if the CSV still uses the old duplicate "Invoice No" header for column AP,
+                # pandas renames it to "Invoice No.1" automatically.
+                custom_invoice_no = (
+                    data.get("Our Invoice No") or
+                    data.get("Invoice No.1") or
+                    data.get("Invoice No.2")
+                )
                 if custom_invoice_no and str(custom_invoice_no).lower() != "nan" and str(custom_invoice_no).strip() != "":
                     base_invoice_no = str(custom_invoice_no).strip()
                 else:
